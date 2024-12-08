@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagesFilters.Gui", "ImageFilters\ImagesFilters.Gui.csproj", "{213AD278-901B-430C-9611-E19F1DECA4D9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagesFilters.Logic", "ImagesFilters.Logic\ImagesFilters.Logic.csproj", "{529BC6B5-D77A-4B04-9F56-D32FE7B5FDFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagesFilters.Gui", "ImageFilters.Gui\ImagesFilters.Gui.csproj", "{DDBD2339-188E-4C34-8D08-950604021264}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{213AD278-901B-430C-9611-E19F1DECA4D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{213AD278-901B-430C-9611-E19F1DECA4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{213AD278-901B-430C-9611-E19F1DECA4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{213AD278-901B-430C-9611-E19F1DECA4D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{529BC6B5-D77A-4B04-9F56-D32FE7B5FDFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{529BC6B5-D77A-4B04-9F56-D32FE7B5FDFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{529BC6B5-D77A-4B04-9F56-D32FE7B5FDFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{529BC6B5-D77A-4B04-9F56-D32FE7B5FDFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDBD2339-188E-4C34-8D08-950604021264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDBD2339-188E-4C34-8D08-950604021264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDBD2339-188E-4C34-8D08-950604021264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDBD2339-188E-4C34-8D08-950604021264}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
