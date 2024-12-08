@@ -87,7 +87,7 @@
             pictureBoxOriginalImage.BackColor = SystemColors.Control;
             pictureBoxOriginalImage.BorderStyle = BorderStyle.Fixed3D;
             pictureBoxOriginalImage.ImageLocation = "";
-            pictureBoxOriginalImage.Location = new Point(19, 364);
+            pictureBoxOriginalImage.Location = new Point(27, 361);
             pictureBoxOriginalImage.Margin = new Padding(0);
             pictureBoxOriginalImage.Name = "pictureBoxOriginalImage";
             pictureBoxOriginalImage.Size = new Size(387, 228);
@@ -101,10 +101,10 @@
             pictureBoxResultImage.BackColor = SystemColors.Control;
             pictureBoxResultImage.BorderStyle = BorderStyle.Fixed3D;
             pictureBoxResultImage.ImageLocation = "";
-            pictureBoxResultImage.Location = new Point(439, 40);
+            pictureBoxResultImage.Location = new Point(484, 82);
             pictureBoxResultImage.Margin = new Padding(0);
             pictureBoxResultImage.Name = "pictureBoxResultImage";
-            pictureBoxResultImage.Size = new Size(677, 552);
+            pictureBoxResultImage.Size = new Size(629, 507);
             pictureBoxResultImage.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBoxResultImage.TabIndex = 4;
             pictureBoxResultImage.TabStop = false;
@@ -113,7 +113,6 @@
             // 
             toolStripButtons.AutoSize = false;
             toolStripButtons.BackColor = SystemColors.Menu;
-            toolStripButtons.Dock = DockStyle.None;
             toolStripButtons.Enabled = false;
             toolStripButtons.GripStyle = ToolStripGripStyle.Hidden;
             toolStripButtons.Items.AddRange(new ToolStripItem[] { toolStripBlurButton, toolStripWandBButton, toolStripAquaButton });
@@ -122,10 +121,9 @@
             toolStripButtons.Name = "toolStripButtons";
             toolStripButtons.Padding = new Padding(0);
             toolStripButtons.RenderMode = ToolStripRenderMode.Professional;
-            toolStripButtons.Size = new Size(313, 38);
+            toolStripButtons.Size = new Size(1134, 34);
             toolStripButtons.Stretch = true;
             toolStripButtons.TabIndex = 6;
-            toolStripButtons.Visible = false;
             // 
             // toolStripBlurButton
             // 
@@ -177,33 +175,34 @@
             toolStripAquaButton.TextDirection = ToolStripTextDirection.Horizontal;
             toolStripAquaButton.TextImageRelation = TextImageRelation.ImageAboveText;
             toolStripAquaButton.ToolTipText = "Акварель";
+            toolStripAquaButton.Click += toolStripAquaButton_Click;
             // 
-            // menuStrip1
+            // menuStrip
             // 
             menuStrip.BackColor = SystemColors.Menu;
             menuStrip.GripStyle = ToolStripGripStyle.Visible;
             menuStrip.Items.AddRange(new ToolStripItem[] { stripMenuFilesItem, stripMenuToolItem, StripMenuReferenceItem });
             menuStrip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
             menuStrip.Location = new Point(0, 0);
-            menuStrip.Name = "menuStrip1";
+            menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(0);
             menuStrip.Size = new Size(1134, 24);
             menuStrip.Stretch = false;
             menuStrip.TabIndex = 5;
             menuStrip.Text = "Menu";
             // 
-            // StripMenuFilesItem
+            // stripMenuFilesItem
             // 
             stripMenuFilesItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuOpen, toolStripSeparator1, toolStripMenuClear, toolStripSeparator, toolStripMenuSave, toolStripSeparator2, предварительныйпросмотрToolStripMenuItem, toolStripSeparator3, toolStripMenuExit });
-            stripMenuFilesItem.Name = "StripMenuFilesItem";
+            stripMenuFilesItem.Name = "stripMenuFilesItem";
             stripMenuFilesItem.Size = new Size(48, 24);
             stripMenuFilesItem.Text = "&Файл";
             // 
-            // ToolStripMenuOpen
+            // toolStripMenuOpen
             // 
-            toolStripMenuOpen.Image = (Image)resources.GetObject("ToolStripMenuOpen.Image");
+            toolStripMenuOpen.Image = (Image)resources.GetObject("toolStripMenuOpen.Image");
             toolStripMenuOpen.ImageTransparentColor = Color.Magenta;
-            toolStripMenuOpen.Name = "ToolStripMenuOpen";
+            toolStripMenuOpen.Name = "toolStripMenuOpen";
             toolStripMenuOpen.ShortcutKeys = Keys.Control | Keys.O;
             toolStripMenuOpen.Size = new Size(233, 22);
             toolStripMenuOpen.Text = "&Открыть";
@@ -227,11 +226,11 @@
             toolStripSeparator.Name = "toolStripSeparator";
             toolStripSeparator.Size = new Size(230, 6);
             // 
-            // ToolStripMenuSave
+            // toolStripMenuSave
             // 
-            toolStripMenuSave.Image = (Image)resources.GetObject("ToolStripMenuSave.Image");
+            toolStripMenuSave.Image = (Image)resources.GetObject("toolStripMenuSave.Image");
             toolStripMenuSave.ImageTransparentColor = Color.Magenta;
-            toolStripMenuSave.Name = "ToolStripMenuSave";
+            toolStripMenuSave.Name = "toolStripMenuSave";
             toolStripMenuSave.ShortcutKeys = Keys.Control | Keys.S;
             toolStripMenuSave.Size = new Size(233, 22);
             toolStripMenuSave.Text = "&Сохранить";
@@ -254,40 +253,40 @@
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(230, 6);
             // 
-            // ToolStripMenuExit
+            // toolStripMenuExit
             // 
-            toolStripMenuExit.Name = "ToolStripMenuExit";
+            toolStripMenuExit.Name = "toolStripMenuExit";
             toolStripMenuExit.Size = new Size(233, 22);
             toolStripMenuExit.Text = "Вы&ход";
             toolStripMenuExit.Click += ExitToolStripMenuItem_Click;
             // 
-            // StripMenuToolItem
+            // stripMenuToolItem
             // 
             stripMenuToolItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuBlur, toolStripMenuBlackAndWhite, toolStripMenuAqua, toolStripSeparator4, настройкиToolStripMenuItem, параметрыToolStripMenuItem });
-            stripMenuToolItem.Name = "StripMenuToolItem";
+            stripMenuToolItem.Name = "stripMenuToolItem";
             stripMenuToolItem.Size = new Size(95, 24);
             stripMenuToolItem.Text = "&Инструменты";
             // 
-            // ToolStripMenuBlur
+            // toolStripMenuBlur
             // 
             toolStripMenuBlur.Enabled = false;
-            toolStripMenuBlur.Name = "ToolStripMenuBlur";
+            toolStripMenuBlur.Name = "toolStripMenuBlur";
             toolStripMenuBlur.Size = new Size(196, 22);
             toolStripMenuBlur.Text = "Размытие";
             toolStripMenuBlur.Click += ButtonBlur_Click;
             // 
-            // ToolStripMenuBlackAndWhite
+            // toolStripMenuBlackAndWhite
             // 
             toolStripMenuBlackAndWhite.Enabled = false;
-            toolStripMenuBlackAndWhite.Name = "ToolStripMenuBlackAndWhite";
+            toolStripMenuBlackAndWhite.Name = "toolStripMenuBlackAndWhite";
             toolStripMenuBlackAndWhite.Size = new Size(196, 22);
             toolStripMenuBlackAndWhite.Text = "Черно-белое";
             toolStripMenuBlackAndWhite.Click += ButtonBlackWhite_Click;
             // 
-            // ToolStripMenuAqua
+            // toolStripMenuAqua
             // 
             toolStripMenuAqua.Enabled = false;
-            toolStripMenuAqua.Name = "ToolStripMenuAqua";
+            toolStripMenuAqua.Name = "toolStripMenuAqua";
             toolStripMenuAqua.Size = new Size(196, 22);
             toolStripMenuAqua.Text = "Акварелизация";
             // 
@@ -339,9 +338,9 @@
             toolStripSeparator6.Name = "toolStripSeparator6";
             toolStripSeparator6.Size = new Size(155, 6);
             // 
-            // опрограммеToolStripMenuItem
+            // aboutToolStripMenuItem
             // 
-            aboutToolStripMenuItem.Name = "опрограммеToolStripMenuItem";
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(158, 22);
             aboutToolStripMenuItem.Text = "&О программе…";
             // 

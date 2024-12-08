@@ -1,6 +1,7 @@
 ﻿using ImagesFilters.Logic.Interfaces;
 using ImagesFilters.Logic.Model;
 using ImagesFilters.Logic.Model.Components;
+using System.Windows.Forms;
 
 namespace ImagesFilters.Logic.Controller;
 
@@ -21,16 +22,8 @@ public class AppPresenter
         _appView.SetImagePictureBox(key);
     }
 
-    public void SetFilters(Bitmap originalImage)
-    {        
-        foreach (var key in Enum.GetValues<FiltersKey>())
-        {            
-            SetFilter(originalImage, key);
-        }
-    }
-
-    private void SetFilter(Bitmap originalImage, FiltersKey key)
+    public void SetFilters(Bitmap originalImage, FiltersKey key)
     {
-        _appView.SetInDictionaryFilter(_logic.ConvertTo(originalImage, key), key);        
+        _appView.SetInDictionaryFilter(_logic.ConvertTo(originalImage, key), key);
     }
 }
