@@ -1,29 +1,29 @@
 ﻿using ImagesFilters.Logic.Interfaces;
 using ImagesFilters.Logic.Model;
 using ImagesFilters.Logic.Model.Components;
-using System.Windows.Forms;
+using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Controller;
 
 public class AppPresenter
 {
-    private AppLogic _logic;
+    private readonly AppLogic _logic;
 
-    private IAppView _appView;
+    private readonly IAppView _appView;
+
+    public Dictionary<FiltersKey, IFilter> Filters { get; set; }
 
     public AppPresenter(AppLogic logic, IAppView view)
     {
         _logic = logic;
         _appView = view;
+
+        Filters = _logic.Filters;
     }
 
-    public void SetPictureBoxImage(FiltersKey key)
+    public void SetFilters(Bitmap image, IFilter filter)
     {
-        _appView.SetImagePictureBox(key);
-    }
-
-    public void SetFilters(Bitmap originalImage, FiltersKey key)
-    {
-        _appView.SetInDictionaryFilter(_logic.ConvertTo(originalImage, key), key);
+        var imageBlur = _logic.ConvertTo(image, filter);
+        _appView.SetPictureBoxImage(imageBlur);
     }
 }

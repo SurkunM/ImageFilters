@@ -3,14 +3,29 @@
 namespace ImagesFilters.Logic.Model.Filters;
 
 internal class Blur : IFilter
-{
-    public string Name { get; } = "Blur";
+{   
+    private readonly double[,] _convolutionMatrix;
 
-    public static Bitmap Convert(double[,] matrix, Bitmap originalImage)
+    public Blur(double[,] convolutionMatrix)
+    {
+        if (convolutionMatrix is null) 
+        { 
+            throw new ArgumentNullException(nameof(convolutionMatrix));
+        }
+
+        if (convolutionMatrix.Length == 0)
+        {
+            throw new ArgumentException($"Матрица {convolutionMatrix} не может быть размера {convolutionMatrix.Length} ");
+        }
+
+        _convolutionMatrix = convolutionMatrix;
+    }
+
+    public Bitmap Convert(Bitmap originalImage)
     {
         var resultImage = new Bitmap(originalImage);
 
-        var halfMatrixSize = matrix.GetLength(0) / 2;
+        var halfMatrixSize = _convolutionMatrix.GetLength(0) / 2;
         var yUpperLimit = originalImage.Height - halfMatrixSize;
         var xUpperLimit = originalImage.Width - halfMatrixSize;
 
@@ -22,15 +37,15 @@ internal class Blur : IFilter
                 var greenColor = 0.0;
                 var blueColor = 0.0;
 
-                for (int i = 0, yNeighboringPixel = y - halfMatrixSize; i < matrix.GetLength(0); i++, yNeighboringPixel++)
+                for (int i = 0, yNeighboringPixel = y - halfMatrixSize; i < _convolutionMatrix.GetLength(0); i++, yNeighboringPixel++)
                 {
-                    for (int j = 0, xNeighboringPixel = x - halfMatrixSize; j < matrix.GetLength(0); j++, xNeighboringPixel++)
+                    for (int j = 0, xNeighboringPixel = x - halfMatrixSize; j < _convolutionMatrix.GetLength(0); j++, xNeighboringPixel++)
                     {
                         Color pixel = originalImage.GetPixel(xNeighboringPixel, yNeighboringPixel);
 
-                        redColor += pixel.R * matrix[i, j];
-                        greenColor += pixel.G * matrix[i, j];
-                        blueColor += pixel.B * matrix[i, j];
+                        redColor += pixel.R * _convolutionMatrix[i, j];
+                        greenColor += pixel.G * _convolutionMatrix[i, j];
+                        blueColor += pixel.B * _convolutionMatrix[i, j];
                     }
                 }
 
@@ -43,44 +58,5 @@ internal class Blur : IFilter
         }
 
         return resultImage;
-    }
-
-    public uint[,] ConvertPixels(double[,] matrix, uint[,] pixels) //TODO: возможно через перевод пикселей в массив уинтов!
-    {
-        var resultPixels = new uint[pixels.GetLength(0), pixels.GetLength(1)];
-
-        var halfMatrixSize = matrix.GetLength(0) / 2;
-        var yUpperLimit = pixels.GetLength(1) - halfMatrixSize;
-        var xUpperLimit = pixels.GetLength(0) - halfMatrixSize;
-
-        for (int y = halfMatrixSize; y < yUpperLimit; y++)
-        {
-            for (int x = halfMatrixSize; x < xUpperLimit; x++)
-            {
-                var redColor = 0.0;
-                var greenColor = 0.0;
-                var blueColor = 0.0;
-
-                for (int i = 0, yNeighboringPixel = y - halfMatrixSize; i < matrix.GetLength(0); i++, yNeighboringPixel++)
-                {
-                    for (int j = 0, xNeighboringPixel = x - halfMatrixSize; j < matrix.GetLength(0); j++, xNeighboringPixel++)
-                    {
-                        Color pixel = Color.FromArgb((int)pixels[xNeighboringPixel, yNeighboringPixel]);
-
-                        redColor += pixel.R * matrix[i, j];
-                        greenColor += pixel.G * matrix[i, j];
-                        blueColor += pixel.B * matrix[i, j];
-                    }
-                }
-
-                Color resultPixel = Color.FromArgb(ConvolutionMatrixComponents.GetSaturatedColor(redColor),
-                                                   ConvolutionMatrixComponents.GetSaturatedColor(greenColor),
-                                                   ConvolutionMatrixComponents.GetSaturatedColor(blueColor));
-
-              //  resultPixels[x, y] = resultPixel.ToArgb();
-            }
-        }
-
-        return resultPixels;
     }
 }

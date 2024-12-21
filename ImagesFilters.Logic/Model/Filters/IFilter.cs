@@ -2,4 +2,6 @@
 
 public interface IFilter
 {
+    public Bitmap Convert(Bitmap originalImage);
+
 }

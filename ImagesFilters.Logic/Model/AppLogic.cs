@@ -5,15 +5,20 @@ namespace ImagesFilters.Logic.Model;
 
 public class AppLogic
 {
-    public Bitmap ConvertTo(Bitmap originalImage, FiltersKey key)
-    {
-        var matrix = ConvolutionMatrixComponents.GetBlurMatrix(5);
+    public Dictionary<FiltersKey, IFilter> Filters { get; }
 
-        if (key == FiltersKey.Blur)
+    public AppLogic()
+    {
+        Filters = new Dictionary<FiltersKey, IFilter>
         {
-            return Blur.Convert(matrix, originalImage);
-        }
-        
-        return originalImage;
+            {FiltersKey.Blur, new Blur(ConvolutionMatrixComponents.GetMatrix(5))},
+            {FiltersKey.BlackAndWhite, new BlackAndWhite()},
+            {FiltersKey.Aqua, new Aqua()}
+        };
+    }
+
+    public Bitmap ConvertTo(Bitmap originalImage, IFilter filter)
+    {
+        return filter.Convert(originalImage);
     }
 }

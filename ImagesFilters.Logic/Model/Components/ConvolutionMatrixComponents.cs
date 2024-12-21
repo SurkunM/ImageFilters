@@ -17,14 +17,14 @@ public class ConvolutionMatrixComponents
         return (int)Math.Round(color, MidpointRounding.AwayFromZero);
     }
 
-    public static double[,] GetBlurMatrix(int blurMatrixSize)
+    public static double[,] GetMatrix(int matrixSize)
     {
-        double[,] matrix = new double[blurMatrixSize, blurMatrixSize];
+        double[,] matrix = new double[matrixSize, matrixSize];
         double ratio = 1.0 / matrix.Length;
 
-        for (int i = 0; i < blurMatrixSize; i++)
+        for (int i = 0; i < matrixSize; i++)
         {
-            for (int j = 0; j < blurMatrixSize; j++)
+            for (int j = 0; j < matrixSize; j++)
             {
                 matrix[i, j] = ratio;
             }

@@ -1,6 +1,7 @@
 using ImagesFilters.Logic.Controller;
 using ImagesFilters.Logic.Interfaces;
 using ImagesFilters.Logic.Model.Components;
+using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters;
 
@@ -8,11 +9,13 @@ public partial class AppForm : Form, IAppView
 {
     private string _fileName = "";
 
-    private readonly Dictionary<FiltersKey, Bitmap> _imagesDictionary = new Dictionary<FiltersKey, Bitmap>();
+    public Dictionary<FiltersKey, IFilter> Filters { get; set; } = default!;
+
+    private Dictionary<FiltersKey, bool> _isFilterUsed = default!;
+
+    private Bitmap _originalImage = default!;
 
     private Bitmap _currentImage = default!;
-
-    private uint[,] _currentImagePixels = default!;
 
     public AppPresenter Presenter { get; set; } = default!;
 
@@ -33,38 +36,29 @@ public partial class AppForm : Form, IAppView
 
         try
         {
-            if (_imagesDictionary.Count != 0)
+            if (Presenter is null)
             {
-                ClearPictureBoxes();
+                throw new ArgumentNullException(nameof(Presenter));
             }
 
+            Filters = Presenter.Filters;
+            CreateFilterDictionary();
+
             _fileName = openFileDialog.FileName;
-            _imagesDictionary.Add(FiltersKey.Original, new Bitmap(_fileName));
 
-            _currentImage = new Bitmap(openFileDialog.FileName);
+            _originalImage = new Bitmap(_fileName);
+            _currentImage = _originalImage;
 
+            pictureBoxOriginalImage.Image = _originalImage;
+            pictureBoxResultImage.Image = _currentImage;
 
-            pictureBoxOriginalImage.Image = _currentImage; //_imagesDictionary[FiltersKey.Original];
-            pictureBoxResultImage.Image = _currentImage;//_imagesDictionary[FiltersKey.Original];
-
-           //  Presenter.SetFilters(_imagesDictionary[FiltersKey.Original]);
-
-            toolStripMenuClear.Enabled = true;
-            Enabled = false;
-
-            _currentImagePixels = new uint[_currentImage.Height, _currentImage.Width];
-            //for(int y = 0; y < _currentImage.Height; y++) "это попытка ускорения"
-            //{
-            //    for(int x = 0;  x < _currentImage.Width; x++)
-            //    {
-            //        _currentImagePixels[y, x] = (uint)_currentImage.GetPixel(x, y).ToArgb();
-            //    }
-            //}
-
-            Enabled = true;
-            toolStripButtons.Enabled = true;
+            StripMenuButtonsEnable(true);
         }
-        catch
+        catch (ArgumentNullException)
+        {
+            throw;
+        }
+        catch (ArgumentException)
         {
             _fileName = "";
             MessageBox.Show("Не удалось открыть файл", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -73,43 +67,104 @@ public partial class AppForm : Form, IAppView
 
     private void ButtonBlur_Click(object sender, EventArgs e)
     {
-        Presenter.SetFilters(_currentImage, FiltersKey.Blur);
-       Presenter.SetPictureBoxImage(FiltersKey.Blur);        
-    }
-
-    private void ButtonBlackWhite_Click(object sender, EventArgs e)
-    {
-
-    }
-    private void toolStripAquaButton_Click(object sender, EventArgs e)
-    {
-
-    }
-
-    public void SetInDictionaryFilter(Bitmap image, FiltersKey filtersKey)
-    {
-        _imagesDictionary[filtersKey] = image;
-    }
-
-    private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        Application.Exit();
-    }
-
-    public void SetImagePictureBox(FiltersKey filtersKey)
-    {
-        if (_currentImage == _imagesDictionary[filtersKey])
+        if (_isFilterUsed[FiltersKey.Blur])
         {
             return;
         }
 
-        _currentImage = _imagesDictionary[filtersKey];
-        pictureBoxResultImage.Image = _currentImage;
+        FormEnable(false);
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Blur]);
+        _isFilterUsed[FiltersKey.Blur] = true;
+
+        FormEnable(true);
+    }
+
+    private void ButtonBlackWhite_Click(object sender, EventArgs e)
+    {
+        if (_isFilterUsed[FiltersKey.BlackAndWhite])
+        {
+            return;
+        }
+
+        FormEnable(false);       
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.BlackAndWhite]);
+        _isFilterUsed[FiltersKey.BlackAndWhite] = true;
+
+        FormEnable(true);
+    }
+
+    private void ButtonAqua_Click(object sender, EventArgs e)
+    {
+        if (_isFilterUsed[FiltersKey.Aqua])
+        {
+            return;
+        }
+
+        FormEnable(false);
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Aqua]);
+        _isFilterUsed[FiltersKey.Aqua] = true;
+
+        FormEnable(true);
     }
 
     private void ToolStripMenuIClear_Click(object sender, EventArgs e)
     {
         ClearPictureBoxes();
+        StripMenuButtonsEnable(false);
+    }
+
+    private void ToolStripMenuCancel_Click(object sender, EventArgs e)
+    {
+        _currentImage = _originalImage;
+        pictureBoxResultImage.Image = _currentImage;
+        CreateFilterDictionary();
+    }
+
+    private void ToolStripMenuIExit_Click(object sender, EventArgs e)
+    {
+        Application.Exit();
+    }
+
+    public void SetPictureBoxImage(Bitmap image)
+    {
+        if(image is null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        _currentImage = image;
+        pictureBoxResultImage.Image = _currentImage;
+    }
+
+    private void FormEnable(bool isEnable)
+    {
+        menuStrip.Enabled = isEnable;//TODO: Заменить диалоговым окном!
+        panelApp.Enabled = isEnable;        
+    }
+
+    private void StripMenuButtonsEnable(bool isEnable)
+    {
+        toolStripButtons.Enabled = isEnable;
+
+        toolStripMenuAqua.Enabled = isEnable;
+        toolStripMenuBlur.Enabled = isEnable;
+        toolStripMenuBlackAndWhite.Enabled = isEnable;
+
+        toolStripMenuClear.Enabled = isEnable;
+        toolStripMenuCancel.Enabled = isEnable;
+    }
+
+    private void CreateFilterDictionary()
+    {
+        _isFilterUsed = new Dictionary<FiltersKey, bool>();
+
+        foreach(FiltersKey key in Filters.Keys)
+        {
+            _isFilterUsed[key] = false;
+        }
     }
 
     private void ToolStripMenuToolBar_Click(object sender, EventArgs e)
@@ -132,9 +187,19 @@ public partial class AppForm : Form, IAppView
         pictureBoxOriginalImage.Image.Dispose();
         pictureBoxOriginalImage.Image = null;
 
-        _imagesDictionary.Clear();
-
         toolStripMenuClear.Enabled = false;
         toolStripButtons.Enabled = false;
+    }
+
+    private void ConvertBitmapToUintMatrix(Bitmap bitmap)
+    {
+        // _currentImagePixels = new uint[_currentImage.Height, _currentImage.Width];
+        //for(int y = 0; y < _currentImage.Height; y++) "это попытка ускорения"
+        //{
+        //    for(int x = 0;  x < _currentImage.Width; x++)
+        //    {
+        //        _currentImagePixels[y, x] = (uint)_currentImage.GetPixel(x, y).ToArgb();
+        //    }
+        //}
     }
 }

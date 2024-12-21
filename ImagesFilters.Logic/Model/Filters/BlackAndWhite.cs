@@ -1,10 +1,8 @@
 ﻿namespace ImagesFilters.Logic.Model.Filters;
 
 internal class BlackAndWhite : IFilter
-{
-    public string Name { get; } = "BlackAndWhite";
-
-    public static Bitmap Convert(Bitmap originalImage)
+{   
+    public Bitmap Convert(Bitmap originalImage)
     {        
         var resultImage = new Bitmap(originalImage);
 

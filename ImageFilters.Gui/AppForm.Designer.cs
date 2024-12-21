@@ -30,17 +30,19 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             panelApp = new Panel();
+            toolStripButtons = new Panel();
+            radioButton4 = new RadioButton();
+            radioButtonAqua = new RadioButton();
+            radioButtonBlackAndWhite = new RadioButton();
+            radioButtonBlur = new RadioButton();
             pictureBoxOriginalImage = new PictureBox();
             pictureBoxResultImage = new PictureBox();
-            toolStripButtons = new ToolStrip();
-            toolStripBlurButton = new ToolStripButton();
-            toolStripWandBButton = new ToolStripButton();
-            toolStripAquaButton = new ToolStripButton();
             menuStrip = new MenuStrip();
             stripMenuFilesItem = new ToolStripMenuItem();
             toolStripMenuOpen = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripMenuClear = new ToolStripMenuItem();
+            toolStripMenuCancel = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             toolStripMenuSave = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -61,18 +63,18 @@
             toolStripSeparator6 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             panelApp.SuspendLayout();
+            toolStripButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxOriginalImage).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxResultImage).BeginInit();
-            toolStripButtons.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // panelApp
             // 
             panelApp.BackColor = SystemColors.ActiveBorder;
+            panelApp.Controls.Add(toolStripButtons);
             panelApp.Controls.Add(pictureBoxOriginalImage);
             panelApp.Controls.Add(pictureBoxResultImage);
-            panelApp.Controls.Add(toolStripButtons);
             panelApp.Controls.Add(menuStrip);
             panelApp.Dock = DockStyle.Fill;
             panelApp.Location = new Point(0, 0);
@@ -80,6 +82,72 @@
             panelApp.Padding = new Padding(0, 0, 0, 10);
             panelApp.Size = new Size(1134, 611);
             panelApp.TabIndex = 0;
+            // 
+            // toolStripButtons
+            // 
+            toolStripButtons.BackColor = SystemColors.MenuBar;
+            toolStripButtons.Controls.Add(radioButton4);
+            toolStripButtons.Controls.Add(radioButtonAqua);
+            toolStripButtons.Controls.Add(radioButtonBlackAndWhite);
+            toolStripButtons.Controls.Add(radioButtonBlur);
+            toolStripButtons.Enabled = false;
+            toolStripButtons.Location = new Point(0, 24);
+            toolStripButtons.Margin = new Padding(0);
+            toolStripButtons.Name = "toolStripButtons";
+            toolStripButtons.Padding = new Padding(5);
+            toolStripButtons.Size = new Size(368, 43);
+            toolStripButtons.TabIndex = 9;
+            // 
+            // radioButton4
+            // 
+            radioButton4.Appearance = Appearance.Button;
+            radioButton4.AutoSize = true;
+            radioButton4.CheckAlign = ContentAlignment.TopCenter;
+            radioButton4.Location = new Point(281, 8);
+            radioButton4.Name = "radioButton4";
+            radioButton4.Size = new Size(68, 25);
+            radioButton4.TabIndex = 11;
+            radioButton4.Text = "Теснение";
+            radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAqua
+            // 
+            radioButtonAqua.Appearance = Appearance.Button;
+            radioButtonAqua.AutoSize = true;
+            radioButtonAqua.CheckAlign = ContentAlignment.TopCenter;
+            radioButtonAqua.Location = new Point(174, 8);
+            radioButtonAqua.Name = "radioButtonAqua";
+            radioButtonAqua.Size = new Size(101, 25);
+            radioButtonAqua.TabIndex = 10;
+            radioButtonAqua.Text = "Акварелизация";
+            radioButtonAqua.UseVisualStyleBackColor = true;
+            radioButtonAqua.Click += ButtonAqua_Click;
+            // 
+            // radioButtonBlackAndWhite
+            // 
+            radioButtonBlackAndWhite.Appearance = Appearance.Button;
+            radioButtonBlackAndWhite.AutoSize = true;
+            radioButtonBlackAndWhite.CheckAlign = ContentAlignment.TopCenter;
+            radioButtonBlackAndWhite.Location = new Point(78, 8);
+            radioButtonBlackAndWhite.Name = "radioButtonBlackAndWhite";
+            radioButtonBlackAndWhite.Size = new Size(90, 25);
+            radioButtonBlackAndWhite.TabIndex = 9;
+            radioButtonBlackAndWhite.Text = "Черно-белое";
+            radioButtonBlackAndWhite.UseVisualStyleBackColor = true;
+            radioButtonBlackAndWhite.Click += ButtonBlackWhite_Click;
+            // 
+            // radioButtonBlur
+            // 
+            radioButtonBlur.Appearance = Appearance.Button;
+            radioButtonBlur.AutoSize = true;
+            radioButtonBlur.CheckAlign = ContentAlignment.TopCenter;
+            radioButtonBlur.Location = new Point(8, 8);
+            radioButtonBlur.Name = "radioButtonBlur";
+            radioButtonBlur.Size = new Size(64, 25);
+            radioButtonBlur.TabIndex = 8;
+            radioButtonBlur.Text = "Размыть";
+            radioButtonBlur.UseVisualStyleBackColor = true;
+            radioButtonBlur.Click += ButtonBlur_Click;
             // 
             // pictureBoxOriginalImage
             // 
@@ -109,74 +177,6 @@
             pictureBoxResultImage.TabIndex = 4;
             pictureBoxResultImage.TabStop = false;
             // 
-            // toolStripButtons
-            // 
-            toolStripButtons.AutoSize = false;
-            toolStripButtons.BackColor = SystemColors.Menu;
-            toolStripButtons.Enabled = false;
-            toolStripButtons.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripButtons.Items.AddRange(new ToolStripItem[] { toolStripBlurButton, toolStripWandBButton, toolStripAquaButton });
-            toolStripButtons.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            toolStripButtons.Location = new Point(0, 24);
-            toolStripButtons.Name = "toolStripButtons";
-            toolStripButtons.Padding = new Padding(0);
-            toolStripButtons.RenderMode = ToolStripRenderMode.Professional;
-            toolStripButtons.Size = new Size(1134, 34);
-            toolStripButtons.Stretch = true;
-            toolStripButtons.TabIndex = 6;
-            // 
-            // toolStripBlurButton
-            // 
-            toolStripBlurButton.AutoSize = false;
-            toolStripBlurButton.AutoToolTip = false;
-            toolStripBlurButton.BackColor = SystemColors.Control;
-            toolStripBlurButton.BackgroundImageLayout = ImageLayout.Stretch;
-            toolStripBlurButton.Checked = true;
-            toolStripBlurButton.CheckState = CheckState.Indeterminate;
-            toolStripBlurButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripBlurButton.ImageAlign = ContentAlignment.BottomCenter;
-            toolStripBlurButton.ImageTransparentColor = Color.Magenta;
-            toolStripBlurButton.Margin = new Padding(10);
-            toolStripBlurButton.Name = "toolStripBlurButton";
-            toolStripBlurButton.RightToLeft = RightToLeft.No;
-            toolStripBlurButton.Size = new Size(65, 25);
-            toolStripBlurButton.Text = "Размытие";
-            toolStripBlurButton.TextImageRelation = TextImageRelation.ImageAboveText;
-            toolStripBlurButton.ToolTipText = "Размытие";
-            toolStripBlurButton.Click += ButtonBlur_Click;
-            // 
-            // toolStripWandBButton
-            // 
-            toolStripWandBButton.AutoSize = false;
-            toolStripWandBButton.BackColor = SystemColors.ControlDarkDark;
-            toolStripWandBButton.BackgroundImageLayout = ImageLayout.Zoom;
-            toolStripWandBButton.Checked = true;
-            toolStripWandBButton.CheckOnClick = true;
-            toolStripWandBButton.CheckState = CheckState.Checked;
-            toolStripWandBButton.ImageTransparentColor = Color.Magenta;
-            toolStripWandBButton.Margin = new Padding(10);
-            toolStripWandBButton.Name = "toolStripWandBButton";
-            toolStripWandBButton.Size = new Size(84, 25);
-            toolStripWandBButton.Text = "Черно-белое";
-            toolStripWandBButton.TextDirection = ToolStripTextDirection.Horizontal;
-            toolStripWandBButton.ToolTipText = "Черно-белое";
-            toolStripWandBButton.Click += ButtonBlackWhite_Click;
-            // 
-            // toolStripAquaButton
-            // 
-            toolStripAquaButton.AutoSize = false;
-            toolStripAquaButton.Checked = true;
-            toolStripAquaButton.CheckState = CheckState.Indeterminate;
-            toolStripAquaButton.ImageTransparentColor = Color.Magenta;
-            toolStripAquaButton.Margin = new Padding(10, 10, 0, 10);
-            toolStripAquaButton.Name = "toolStripAquaButton";
-            toolStripAquaButton.Size = new Size(95, 25);
-            toolStripAquaButton.Text = "Акварелизация";
-            toolStripAquaButton.TextDirection = ToolStripTextDirection.Horizontal;
-            toolStripAquaButton.TextImageRelation = TextImageRelation.ImageAboveText;
-            toolStripAquaButton.ToolTipText = "Акварель";
-            toolStripAquaButton.Click += toolStripAquaButton_Click;
-            // 
             // menuStrip
             // 
             menuStrip.BackColor = SystemColors.Menu;
@@ -193,7 +193,7 @@
             // 
             // stripMenuFilesItem
             // 
-            stripMenuFilesItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuOpen, toolStripSeparator1, toolStripMenuClear, toolStripSeparator, toolStripMenuSave, toolStripSeparator2, предварительныйпросмотрToolStripMenuItem, toolStripSeparator3, toolStripMenuExit });
+            stripMenuFilesItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuOpen, toolStripSeparator1, toolStripMenuClear, toolStripMenuCancel, toolStripSeparator, toolStripMenuSave, toolStripSeparator2, предварительныйпросмотрToolStripMenuItem, toolStripSeparator3, toolStripMenuExit });
             stripMenuFilesItem.Name = "stripMenuFilesItem";
             stripMenuFilesItem.Size = new Size(48, 24);
             stripMenuFilesItem.Text = "&Файл";
@@ -220,6 +220,14 @@
             toolStripMenuClear.Size = new Size(233, 22);
             toolStripMenuClear.Text = "Очистить";
             toolStripMenuClear.Click += ToolStripMenuIClear_Click;
+            // 
+            // toolStripMenuCancel
+            // 
+            toolStripMenuCancel.Enabled = false;
+            toolStripMenuCancel.Name = "toolStripMenuCancel";
+            toolStripMenuCancel.Size = new Size(233, 22);
+            toolStripMenuCancel.Text = "Сбросить";
+            toolStripMenuCancel.Click += ToolStripMenuCancel_Click;
             // 
             // toolStripSeparator
             // 
@@ -258,7 +266,7 @@
             toolStripMenuExit.Name = "toolStripMenuExit";
             toolStripMenuExit.Size = new Size(233, 22);
             toolStripMenuExit.Text = "Вы&ход";
-            toolStripMenuExit.Click += ExitToolStripMenuItem_Click;
+            toolStripMenuExit.Click += ToolStripMenuIExit_Click;
             // 
             // stripMenuToolItem
             // 
@@ -356,10 +364,10 @@
             Text = "App";
             panelApp.ResumeLayout(false);
             panelApp.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxOriginalImage).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxResultImage).EndInit();
             toolStripButtons.ResumeLayout(false);
             toolStripButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxOriginalImage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxResultImage).EndInit();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);
@@ -368,35 +376,44 @@
         #endregion
 
         private Panel panelApp;
+        private Panel toolStripButtons;
+
         private PictureBox pictureBoxResultImage;
+        private PictureBox pictureBoxOriginalImage;
+
         private MenuStrip menuStrip;
+
         private ToolStripMenuItem stripMenuFilesItem;
         private ToolStripMenuItem toolStripMenuOpen;
-        private ToolStripSeparator toolStripSeparator;
         private ToolStripMenuItem toolStripMenuSave;
-        private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem предварительныйпросмотрToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem toolStripMenuExit;
         private ToolStripMenuItem stripMenuToolItem;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem StripMenuReferenceItem;
+
+        private ToolStripMenuItem предварительныйпросмотрToolStripMenuItem;
         private ToolStripMenuItem настройкиToolStripMenuItem;
         private ToolStripMenuItem параметрыToolStripMenuItem;
-        private ToolStripMenuItem StripMenuReferenceItem;
         private ToolStripMenuItem содержимоеToolStripMenuItem;
         private ToolStripMenuItem индексToolStripMenuItem;
         private ToolStripMenuItem поискToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator6;
-        private ToolStripMenuItem aboutToolStripMenuItem;
-        private ToolStrip toolStripButtons;
-        private ToolStripButton toolStripBlurButton;
-        private ToolStripButton toolStripWandBButton;
-        private ToolStripButton toolStripAquaButton;
-        private PictureBox pictureBoxOriginalImage;
-        private ToolStripSeparator toolStripSeparator1;
+
         private ToolStripMenuItem toolStripMenuClear;
         private ToolStripMenuItem toolStripMenuBlur;
         private ToolStripMenuItem toolStripMenuBlackAndWhite;
         private ToolStripMenuItem toolStripMenuAqua;
+        private ToolStripMenuItem toolStripMenuCancel;
+
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripSeparator toolStripSeparator3;
         private ToolStripSeparator toolStripSeparator4;
+        private ToolStripSeparator toolStripSeparator;
+        private ToolStripSeparator toolStripSeparator6;
+
+        private RadioButton radioButtonBlur;
+        private RadioButton radioButton4;
+        private RadioButton radioButtonAqua;
+        private RadioButton radioButtonBlackAndWhite;
     }
 }
