@@ -2,18 +2,20 @@
 
 namespace ImagesFilters.Logic.Model.Filters;
 
-internal class Blur : IFilter
+internal class Noise : IFilter
 {
-    private readonly double[,] _convolutionMatrix;
+    private const int _sigma = 2;
 
-    public Blur(int convolutionMatrixSize)
+    private readonly int[,] _convolutionMatrix;
+
+    public Noise()
     {
-        if (convolutionMatrixSize <= 1 || convolutionMatrixSize % 2 == 0 || convolutionMatrixSize > 9)
+        _convolutionMatrix = new int[3, 3]
         {
-            throw new ArgumentException("Размер матрицы не может быть меньше или равной 1 или быть четным числом.");
-        }
-
-        _convolutionMatrix = GetMatrix(convolutionMatrixSize);
+            {1, 0, 0},
+            {0, _sigma * _sigma, 0},
+            {0, 0, 1}
+        };
     }
 
     public Bitmap Convert(Bitmap incomingImage)
@@ -53,21 +55,5 @@ internal class Blur : IFilter
         }
 
         return resultImage;
-    }
-
-    public static double[,] GetMatrix(int matrixSize)
-    {
-        double[,] matrix = new double[matrixSize, matrixSize];
-        double ratio = 1.0 / matrix.Length;
-
-        for (int i = 0; i < matrixSize; i++)
-        {
-            for (int j = 0; j < matrixSize; j++)
-            {
-                matrix[i, j] = ratio;
-            }
-        }
-
-        return matrix;
     }
 }

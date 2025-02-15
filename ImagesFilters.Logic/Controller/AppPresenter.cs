@@ -19,11 +19,34 @@ public class AppPresenter
         _appView = view;
 
         Filters = _logic.Filters;
+
+        var count = Enum.GetValues(typeof(FiltersKey)).Length;
+
+        if (Filters.Count != count)
+        {
+            throw new ArgumentException("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
+        }
     }
 
-    public void SetFilters(Bitmap image, IFilter filter)
+    public void SetFilters(Bitmap incomingImage, IFilter filter)
     {
-        var imageBlur = _logic.ConvertTo(image, filter);
-        _appView.SetPictureBoxImage(imageBlur);
+        if (incomingImage is null)
+        {
+            throw new ArgumentNullException(nameof(incomingImage));
+        }
+
+        if (filter is null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+
+        var resultImage = _logic.ConvertTo(incomingImage, filter);
+        _appView.SetPictureBoxImage(resultImage);
+    }
+
+    public void SetOriginalImage(Bitmap incomingImage)
+    {
+        SetFilters(incomingImage, Filters[FiltersKey.Original]);
+        _appView.CreateFiltersDictionary();// Разделить интерфейсы? 
     }
 }

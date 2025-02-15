@@ -26,7 +26,7 @@ public partial class AppForm : Form, IAppView
 
     private void ToolStripMenuOpenFile_Click(object sender, EventArgs e)
     {
-        using var openFileDialog = new OpenFileDialog();
+        var openFileDialog = new OpenFileDialog();
         openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
 
         if (openFileDialog.ShowDialog() != DialogResult.OK)
@@ -42,7 +42,7 @@ public partial class AppForm : Form, IAppView
             }
 
             Filters = Presenter.Filters;
-            CreateFilterDictionary();
+            CreateFiltersDictionary();
 
             _fileName = openFileDialog.FileName;
 
@@ -53,6 +53,7 @@ public partial class AppForm : Form, IAppView
             pictureBoxResultImage.Image = _currentImage;
 
             StripMenuButtonsEnable(true);
+            toolStripButtons.Visible = true;
         }
         catch (ArgumentNullException)
         {
@@ -65,13 +66,99 @@ public partial class AppForm : Form, IAppView
         }
     }
 
-    private void ButtonBlur_Click(object sender, EventArgs e)
+    public void SetPictureBoxImage(Bitmap image)
     {
-        if (_isFilterUsed[FiltersKey.Blur])
+        if (image is null)
         {
-            return;
+            throw new ArgumentNullException(nameof(image));
         }
 
+        _currentImage = image;
+        pictureBoxResultImage.Image = _currentImage;
+    }
+
+    public void CreateFiltersDictionary()
+    {
+        _isFilterUsed = new Dictionary<FiltersKey, bool>();
+
+        foreach (FiltersKey key in Filters.Keys)
+        {
+            _isFilterUsed[key] = false;
+        }
+    }
+
+    private void StripMenuButtonsEnable(bool isEnable)
+    {
+        toolStripButtons.Enabled = isEnable;
+
+        toolStripMenuAqua.Enabled = isEnable;
+        toolStripMenuBlur.Enabled = isEnable;
+        toolStripMenuBlackAndWhite.Enabled = isEnable;
+
+        toolStripMenuDeleteImage.Enabled = isEnable;
+        toolStripMenuCancel.Enabled = isEnable;
+    }
+
+    private void ClearPictureBoxes()
+    {
+        pictureBoxResultImage.Image = null;
+
+        pictureBoxOriginalImage.Image = null;
+
+        toolStripMenuDeleteImage.Enabled = false;
+        toolStripButtons.Enabled = false;
+    }
+
+    private void FormEnable(bool isEnable)
+    {
+        if (!isEnable)
+        {
+            this.Cursor = Cursors.WaitCursor;
+        }
+        else
+        {
+            this.Cursor = Cursors.Default;
+        }
+
+        menuStrip.Enabled = isEnable;//TODO: Заменить диалоговым окном!
+        panelApp.Enabled = isEnable;
+    }
+
+    private void ButtonClick_SetToolBar(object sender, EventArgs e)
+    {
+        if (toolStripButtons.Visible)
+        {
+            toolStripButtons.Visible = false;
+        }
+        else
+        {
+            toolStripButtons.Visible = true;
+        }
+    }
+
+    private void ButtonClick_DeleteImage(object sender, EventArgs e)
+    {
+        DialogResult result = MessageBox.Show("Удалить изображение?", "Подтверждение", MessageBoxButtons.YesNo);
+
+        if (result == DialogResult.Yes)
+        {
+            ClearPictureBoxes();
+            StripMenuButtonsEnable(false);
+        }
+    }
+
+    private void ButtonClick_Cancel(object sender, EventArgs e)
+    {
+        DialogResult result = MessageBox.Show("Сбросить изменения?", "Подтверждение", MessageBoxButtons.YesNo);
+
+        if (result == DialogResult.Yes)
+        {
+            Presenter.SetOriginalImage(_originalImage);
+        }
+    }
+
+    private void ButtonClick_Blur(object sender, EventArgs e)
+    {
         FormEnable(false);
 
         Presenter.SetFilters(_currentImage, Filters[FiltersKey.Blur]);
@@ -80,14 +167,14 @@ public partial class AppForm : Form, IAppView
         FormEnable(true);
     }
 
-    private void ButtonBlackWhite_Click(object sender, EventArgs e)
+    private void ButtonClick_BlackWhite(object sender, EventArgs e)
     {
         if (_isFilterUsed[FiltersKey.BlackAndWhite])
         {
             return;
         }
 
-        FormEnable(false);       
+        FormEnable(false);
 
         Presenter.SetFilters(_currentImage, Filters[FiltersKey.BlackAndWhite]);
         _isFilterUsed[FiltersKey.BlackAndWhite] = true;
@@ -95,7 +182,7 @@ public partial class AppForm : Form, IAppView
         FormEnable(true);
     }
 
-    private void ButtonAqua_Click(object sender, EventArgs e)
+    private void ButtonClick_Aqua(object sender, EventArgs e)
     {
         if (_isFilterUsed[FiltersKey.Aqua])
         {
@@ -110,96 +197,43 @@ public partial class AppForm : Form, IAppView
         FormEnable(true);
     }
 
-    private void ToolStripMenuIClear_Click(object sender, EventArgs e)
+    private void ButtonClick_Embossing(object sender, EventArgs e)
     {
-        ClearPictureBoxes();
-        StripMenuButtonsEnable(false);
+        if (_isFilterUsed[FiltersKey.Embossing])
+        {
+            return;
+        }
+
+        FormEnable(false);
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Embossing]);
+        _isFilterUsed[FiltersKey.Embossing] = true;
+
+        FormEnable(true);
     }
 
-    private void ToolStripMenuCancel_Click(object sender, EventArgs e)
+    private void ButtonClick_Sharpen(object sender, EventArgs e)
     {
-        _currentImage = _originalImage;
-        pictureBoxResultImage.Image = _currentImage;
-        CreateFilterDictionary();
+        FormEnable(false);
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Sharpen]);
+        _isFilterUsed[FiltersKey.Sharpen] = true;
+
+        FormEnable(true);
     }
 
-    private void ToolStripMenuIExit_Click(object sender, EventArgs e)
+    private void ButtonClick_Noise(object sender, EventArgs e)
+    {
+        FormEnable(false);
+
+        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Noise]);
+        _isFilterUsed[FiltersKey.Noise] = true;
+
+        FormEnable(true);
+    }
+
+    private void ButtonClick_Exit(object sender, EventArgs e)
     {
         Application.Exit();
-    }
-
-    public void SetPictureBoxImage(Bitmap image)
-    {
-        if(image is null)
-        {
-            throw new ArgumentNullException();
-        }
-
-        _currentImage = image;
-        pictureBoxResultImage.Image = _currentImage;
-    }
-
-    private void FormEnable(bool isEnable)
-    {
-        menuStrip.Enabled = isEnable;//TODO: Заменить диалоговым окном!
-        panelApp.Enabled = isEnable;        
-    }
-
-    private void StripMenuButtonsEnable(bool isEnable)
-    {
-        toolStripButtons.Enabled = isEnable;
-
-        toolStripMenuAqua.Enabled = isEnable;
-        toolStripMenuBlur.Enabled = isEnable;
-        toolStripMenuBlackAndWhite.Enabled = isEnable;
-
-        toolStripMenuClear.Enabled = isEnable;
-        toolStripMenuCancel.Enabled = isEnable;
-    }
-
-    private void CreateFilterDictionary()
-    {
-        _isFilterUsed = new Dictionary<FiltersKey, bool>();
-
-        foreach(FiltersKey key in Filters.Keys)
-        {
-            _isFilterUsed[key] = false;
-        }
-    }
-
-    private void ToolStripMenuToolBar_Click(object sender, EventArgs e)
-    {
-        if (toolStripButtons.Visible)
-        {
-            toolStripButtons.Visible = false;
-        }
-        else
-        {
-            toolStripButtons.Visible = true;
-        }
-    }
-
-    private void ClearPictureBoxes()
-    {
-        pictureBoxResultImage.Image.Dispose();
-        pictureBoxResultImage.Image = null;
-
-        pictureBoxOriginalImage.Image.Dispose();
-        pictureBoxOriginalImage.Image = null;
-
-        toolStripMenuClear.Enabled = false;
-        toolStripButtons.Enabled = false;
-    }
-
-    private void ConvertBitmapToUintMatrix(Bitmap bitmap)
-    {
-        // _currentImagePixels = new uint[_currentImage.Height, _currentImage.Width];
-        //for(int y = 0; y < _currentImage.Height; y++) "это попытка ускорения"
-        //{
-        //    for(int x = 0;  x < _currentImage.Width; x++)
-        //    {
-        //        _currentImagePixels[y, x] = (uint)_currentImage.GetPixel(x, y).ToArgb();
-        //    }
-        //}
     }
 }

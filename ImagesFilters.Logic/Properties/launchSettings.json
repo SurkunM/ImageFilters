@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ImagesFilters.Logic": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "hotReloadEnabled": false
+    }
+  }
+}

@@ -2,9 +2,21 @@
 
 namespace ImagesFilters.Logic.Model.Filters;
 
-internal class LiteBlur
+internal class LiteBlur// Скорее всего не сработает! Удалить!!!
 {
-    public uint[,] ConvertPixels(double[,] matrix, uint[,] pixels) //TODO: возможно через перевод пикселей в массив уинтов!
+    private void ConvertBitmapToUintMatrix(Bitmap bitmap)
+    {
+        // _currentImagePixels = new uint[_currentImage.Height, _currentImage.Width]; это из View
+        //for(int y = 0; y < _currentImage.Height; y++) 
+        //{
+        //    for(int x = 0;  x < _currentImage.Width; x++)
+        //    {
+        //        _currentImagePixels[y, x] = (uint)_currentImage.GetPixel(x, y).ToArgb();
+        //    }
+        //}
+    }
+
+    public uint[,] ConvertPixels(double[,] matrix, uint[,] pixels) //TODO: возможно через перевод пикселей в массив уинтов! Нужен класс RGB или Енум и побитово взять из pixel[x,y] по 3 значения
     {
         var resultPixels = new uint[pixels.GetLength(0), pixels.GetLength(1)];
 
@@ -32,9 +44,9 @@ internal class LiteBlur
                     }
                 }
 
-                Color resultPixel = Color.FromArgb(ConvolutionMatrixComponents.GetSaturatedColor(redColor),
-                                                   ConvolutionMatrixComponents.GetSaturatedColor(greenColor),
-                                                   ConvolutionMatrixComponents.GetSaturatedColor(blueColor));
+                Color resultPixel = Color.FromArgb(MatrixComponents.GetSaturatedColor(redColor),
+                                                   MatrixComponents.GetSaturatedColor(greenColor),
+                                                   MatrixComponents.GetSaturatedColor(blueColor));
 
                 //  resultPixels[x, y] = resultPixel.ToArgb();
             }
@@ -42,4 +54,13 @@ internal class LiteBlur
 
         return resultPixels;
     }
+
+    //public static RGB calculationOfColor(UInt32 pixel, double coefficient)
+    //{
+    //    RGB Color = new RGB();
+    //    Color.R = (float)(coefficient * ((pixel & 0x00FF0000) >> 16));
+    //    Color.G = (float)(coefficient * ((pixel & 0x0000FF00) >> 8));
+    //    Color.B = (float)(coefficient * (pixel & 0x000000FF));
+    //    return Color;
+    //}
 }

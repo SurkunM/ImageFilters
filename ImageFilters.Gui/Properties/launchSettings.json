@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ImagesFilters.Gui": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "hotReloadEnabled": true
+    }
+  }
+}

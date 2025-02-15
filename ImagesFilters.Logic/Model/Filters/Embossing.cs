@@ -2,23 +2,27 @@
 
 namespace ImagesFilters.Logic.Model.Filters;
 
-internal class Blur : IFilter
+internal class Embossing : IFilter
 {
-    private readonly double[,] _convolutionMatrix;
+    private readonly int[,] _convolutionMatrix;
 
-    public Blur(int convolutionMatrixSize)
+    private readonly BlackAndWhite _blackAndWhiteFilter = default!;
+
+    public Embossing()
     {
-        if (convolutionMatrixSize <= 1 || convolutionMatrixSize % 2 == 0 || convolutionMatrixSize > 9)
+        _convolutionMatrix = new int[3, 3] 
         {
-            throw new ArgumentException("Размер матрицы не может быть меньше или равной 1 или быть четным числом.");
-        }
+            { 0, 1, 0 },
+            { -1, 0, 1},
+            { 0, -1, 0}
+        };
 
-        _convolutionMatrix = GetMatrix(convolutionMatrixSize);
+        _blackAndWhiteFilter = new BlackAndWhite();
     }
 
     public Bitmap Convert(Bitmap incomingImage)
     {
-        var resultImage = new Bitmap(incomingImage);
+        var resultImage = _blackAndWhiteFilter.Convert(incomingImage);
 
         var halfMatrixSize = _convolutionMatrix.GetLength(0) / 2;
         var yUpperLimit = incomingImage.Height - halfMatrixSize;
@@ -44,30 +48,14 @@ internal class Blur : IFilter
                     }
                 }
 
-                Color resultPixel = Color.FromArgb(MatrixComponents.GetSaturatedColor(redColor),
-                                                   MatrixComponents.GetSaturatedColor(greenColor),
-                                                   MatrixComponents.GetSaturatedColor(blueColor));
+                Color resultPixel = Color.FromArgb(MatrixComponents.GetSaturatedColor(redColor + 128),
+                                                   MatrixComponents.GetSaturatedColor(greenColor + 128),
+                                                   MatrixComponents.GetSaturatedColor(blueColor + 128));
 
                 resultImage.SetPixel(x, y, resultPixel);
             }
         }
 
         return resultImage;
-    }
-
-    public static double[,] GetMatrix(int matrixSize)
-    {
-        double[,] matrix = new double[matrixSize, matrixSize];
-        double ratio = 1.0 / matrix.Length;
-
-        for (int i = 0; i < matrixSize; i++)
-        {
-            for (int j = 0; j < matrixSize; j++)
-            {
-                matrix[i, j] = ratio;
-            }
-        }
-
-        return matrix;
     }
 }
