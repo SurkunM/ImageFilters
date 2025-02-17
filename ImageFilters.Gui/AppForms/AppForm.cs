@@ -1,17 +1,13 @@
 using ImagesFilters.Logic.Controller;
 using ImagesFilters.Logic.Interfaces;
 using ImagesFilters.Logic.Model.Components;
-using ImagesFilters.Logic.Model.Filters;
+using System.Drawing.Imaging;
 
 namespace ImagesFilters;
 
-public partial class AppForm : Form, IAppView
+public partial class AppForm : Form, IAppView, IAsyncConversionApp
 {
     private string _fileName = "";
-
-    public Dictionary<FiltersKey, IFilter> Filters { get; set; } = default!;
-
-    private Dictionary<FiltersKey, bool> _isFilterUsed = default!;
 
     private Bitmap _originalImage = default!;
 
@@ -24,7 +20,7 @@ public partial class AppForm : Form, IAppView
         InitializeComponent();
     }
 
-    private void ToolStripMenuOpenFile_Click(object sender, EventArgs e)
+    private void ToolStripMenuClick_OpenFile(object sender, EventArgs e)
     {
         var openFileDialog = new OpenFileDialog();
         openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
@@ -40,9 +36,6 @@ public partial class AppForm : Form, IAppView
             {
                 throw new ArgumentNullException(nameof(Presenter));
             }
-
-            Filters = Presenter.Filters;
-            CreateFiltersDictionary();
 
             _fileName = openFileDialog.FileName;
 
@@ -66,6 +59,28 @@ public partial class AppForm : Form, IAppView
         }
     }
 
+    private void ToolStripMenuClick_SaveImage(object sender, EventArgs e)
+    {
+        var saveImageDialog = new SaveFileDialog();
+
+        saveImageDialog.Title = "Сохранить картинку как...";
+        saveImageDialog.OverwritePrompt = true;
+        saveImageDialog.CheckPathExists = true;
+        saveImageDialog.Filter = "Image Files(*.BMP)|*.BMP|Image Files(*.JPG)|*.JPG|Image Files(*.GIF)|*.GIF|Image Files(*.PNG)|*.PNG|All files (*.*)|*.*";
+
+        if (saveImageDialog.ShowDialog() == DialogResult.OK)
+        {
+            try
+            {
+                _currentImage.Save(saveImageDialog.FileName, ImageFormat.Jpeg);
+            }
+            catch
+            {
+                MessageBox.Show("Невозможно сохранить изображение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+
     public void SetPictureBoxImage(Bitmap image)
     {
         if (image is null)
@@ -77,50 +92,30 @@ public partial class AppForm : Form, IAppView
         pictureBoxResultImage.Image = _currentImage;
     }
 
-    public void CreateFiltersDictionary()
-    {
-        _isFilterUsed = new Dictionary<FiltersKey, bool>();
-
-        foreach (FiltersKey key in Filters.Keys)
-        {
-            _isFilterUsed[key] = false;
-        }
-    }
-
     private void StripMenuButtonsEnable(bool isEnable)
     {
         toolStripButtons.Enabled = isEnable;
-
-        toolStripMenuAqua.Enabled = isEnable;
-        toolStripMenuBlur.Enabled = isEnable;
-        toolStripMenuBlackAndWhite.Enabled = isEnable;
-
         toolStripMenuDeleteImage.Enabled = isEnable;
         toolStripMenuCancel.Enabled = isEnable;
     }
 
-    private void ClearPictureBoxes()
+    public void SetVisibleProgressPanel(bool isVisible)
     {
-        pictureBoxResultImage.Image = null;
-
-        pictureBoxOriginalImage.Image = null;
-
-        toolStripMenuDeleteImage.Enabled = false;
-        toolStripButtons.Enabled = false;
+        conversionProgressPanel.Visible = isVisible;      
     }
 
-    private void FormEnable(bool isEnable)
+    public void IsFormEnabled(bool isEnable)
     {
         if (!isEnable)
         {
-            this.Cursor = Cursors.WaitCursor;
+            panelApp.Cursor = Cursors.WaitCursor;
         }
         else
         {
-            this.Cursor = Cursors.Default;
+            panelApp.Cursor = Cursors.Default;
         }
 
-        menuStrip.Enabled = isEnable;//TODO: Заменить диалоговым окном!
+        menuStrip.Enabled = isEnable;
         panelApp.Enabled = isEnable;
     }
 
@@ -142,7 +137,12 @@ public partial class AppForm : Form, IAppView
 
         if (result == DialogResult.Yes)
         {
-            ClearPictureBoxes();
+            pictureBoxResultImage.Image = null;
+            pictureBoxOriginalImage.Image = null;
+
+            toolStripMenuDeleteImage.Enabled = false;
+            toolStripButtons.Enabled = false;
+
             StripMenuButtonsEnable(false);
         }
     }
@@ -159,77 +159,28 @@ public partial class AppForm : Form, IAppView
 
     private void ButtonClick_Blur(object sender, EventArgs e)
     {
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Blur]);
-        _isFilterUsed[FiltersKey.Blur] = true;
-
-        FormEnable(true);
+        Presenter.SetFilterAsync(_currentImage, FiltersKey.Blur);
     }
 
     private void ButtonClick_BlackWhite(object sender, EventArgs e)
     {
-        if (_isFilterUsed[FiltersKey.BlackAndWhite])
-        {
-            return;
-        }
+        Presenter.SetFilterAsync(_currentImage, FiltersKey.BlackAndWhite);
 
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.BlackAndWhite]);
-        _isFilterUsed[FiltersKey.BlackAndWhite] = true;
-
-        FormEnable(true);
     }
 
     private void ButtonClick_Aqua(object sender, EventArgs e)
     {
-        if (_isFilterUsed[FiltersKey.Aqua])
-        {
-            return;
-        }
-
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Aqua]);
-        _isFilterUsed[FiltersKey.Aqua] = true;
-
-        FormEnable(true);
+        Presenter.SetFilterAsync(_currentImage, FiltersKey.Aqua);
     }
 
     private void ButtonClick_Embossing(object sender, EventArgs e)
     {
-        if (_isFilterUsed[FiltersKey.Embossing])
-        {
-            return;
-        }
-
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Embossing]);
-        _isFilterUsed[FiltersKey.Embossing] = true;
-
-        FormEnable(true);
+        Presenter.SetFilterAsync(_currentImage, FiltersKey.Embossing);
     }
 
     private void ButtonClick_Sharpen(object sender, EventArgs e)
     {
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Sharpen]);
-        _isFilterUsed[FiltersKey.Sharpen] = true;
-
-        FormEnable(true);
-    }
-
-    private void ButtonClick_Noise(object sender, EventArgs e)
-    {
-        FormEnable(false);
-
-        Presenter.SetFilters(_currentImage, Filters[FiltersKey.Noise]);
-        _isFilterUsed[FiltersKey.Noise] = true;
-
-        FormEnable(true);
+        Presenter.SetFilterAsync(_currentImage, FiltersKey.Sharpen);
     }
 
     private void ButtonClick_Exit(object sender, EventArgs e)

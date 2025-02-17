@@ -13,7 +13,7 @@ internal class Blur : IFilter
             throw new ArgumentException("Размер матрицы не может быть меньше или равной 1 или быть четным числом.");
         }
 
-        _convolutionMatrix = GetMatrix(convolutionMatrixSize);
+        _convolutionMatrix = MatrixComponents.GetMatrix(convolutionMatrixSize);
     }
 
     public Bitmap Convert(Bitmap incomingImage)
@@ -53,21 +53,5 @@ internal class Blur : IFilter
         }
 
         return resultImage;
-    }
-
-    public static double[,] GetMatrix(int matrixSize)
-    {
-        double[,] matrix = new double[matrixSize, matrixSize];
-        double ratio = 1.0 / matrix.Length;
-
-        for (int i = 0; i < matrixSize; i++)
-        {
-            for (int j = 0; j < matrixSize; j++)
-            {
-                matrix[i, j] = ratio;
-            }
-        }
-
-        return matrix;
     }
 }

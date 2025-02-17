@@ -9,7 +9,7 @@ public class AppPresenter
 {
     private readonly AppLogic _logic;
 
-    private readonly IAppView _appView;
+    private readonly IAppView _appView;   
 
     public Dictionary<FiltersKey, IFilter> Filters { get; set; }
 
@@ -18,35 +18,57 @@ public class AppPresenter
         _logic = logic;
         _appView = view;
 
-        Filters = _logic.Filters;
+        Filters = _logic.Filters;        
 
-        var count = Enum.GetValues(typeof(FiltersKey)).Length;
+        var filtersKeysCount = Enum.GetValues(typeof(FiltersKey)).Length;
 
-        if (Filters.Count != count)
+        if (Filters.Count != filtersKeysCount)
         {
             throw new ArgumentException("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
         }
     }
 
-    public void SetFilters(Bitmap incomingImage, IFilter filter)
+    public void SetOriginalImage(Bitmap incomingImage)
     {
         if (incomingImage is null)
         {
             throw new ArgumentNullException(nameof(incomingImage));
         }
 
-        if (filter is null)
-        {
-            throw new ArgumentNullException(nameof(filter));
-        }
-
-        var resultImage = _logic.ConvertTo(incomingImage, filter);
-        _appView.SetPictureBoxImage(resultImage);
+        SetFilterAsync(incomingImage, FiltersKey.Original);
     }
 
-    public void SetOriginalImage(Bitmap incomingImage)
+    public void SetFilterAsync(Bitmap incomingImage, FiltersKey filterKey)
     {
-        SetFilters(incomingImage, Filters[FiltersKey.Original]);
-        _appView.CreateFiltersDictionary();// Разделить интерфейсы? 
+        if (incomingImage is null)
+        {
+            throw new ArgumentNullException(nameof(incomingImage));
+        }
+
+        if (Filters[filterKey] is null)
+        {
+            throw new ArgumentNullException($"({filterKey}) фильтра с таким ключом не существует");
+        }
+
+        var asyncConversionView = (IAsyncConversionApp)_appView;
+        Bitmap? resultImage = null;        
+
+        var thread = new Thread(() =>
+        {
+            resultImage = _logic.ConvertTo(incomingImage, Filters[filterKey]);
+        });
+
+        asyncConversionView.IsFormEnabled(false);
+        asyncConversionView.SetVisibleProgressPanel(true);
+        thread.Start();
+
+        thread.Join();
+        asyncConversionView.IsFormEnabled(true);
+        asyncConversionView.SetVisibleProgressPanel(false);
+
+        if (resultImage is not null)
+        {
+            _appView.SetPictureBoxImage(resultImage);
+        }
     }
 }

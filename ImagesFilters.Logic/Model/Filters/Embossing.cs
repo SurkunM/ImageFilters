@@ -4,18 +4,13 @@ namespace ImagesFilters.Logic.Model.Filters;
 
 internal class Embossing : IFilter
 {
-    private readonly int[,] _convolutionMatrix;
+    private readonly int[,] _matrix;
 
     private readonly BlackAndWhite _blackAndWhiteFilter = default!;
 
     public Embossing()
     {
-        _convolutionMatrix = new int[3, 3] 
-        {
-            { 0, 1, 0 },
-            { -1, 0, 1},
-            { 0, -1, 0}
-        };
+        _matrix = MatrixComponents.GetEmbossingMatrix();
 
         _blackAndWhiteFilter = new BlackAndWhite();
     }
@@ -24,7 +19,7 @@ internal class Embossing : IFilter
     {
         var resultImage = _blackAndWhiteFilter.Convert(incomingImage);
 
-        var halfMatrixSize = _convolutionMatrix.GetLength(0) / 2;
+        var halfMatrixSize = _matrix.GetLength(0) / 2;
         var yUpperLimit = incomingImage.Height - halfMatrixSize;
         var xUpperLimit = incomingImage.Width - halfMatrixSize;
 
@@ -36,15 +31,15 @@ internal class Embossing : IFilter
                 var greenColor = 0.0;
                 var blueColor = 0.0;
 
-                for (int i = 0, yNeighboringPixel = y - halfMatrixSize; i < _convolutionMatrix.GetLength(0); i++, yNeighboringPixel++)
+                for (int i = 0, yNeighboringPixel = y - halfMatrixSize; i < _matrix.GetLength(0); i++, yNeighboringPixel++)
                 {
-                    for (int j = 0, xNeighboringPixel = x - halfMatrixSize; j < _convolutionMatrix.GetLength(0); j++, xNeighboringPixel++)
+                    for (int j = 0, xNeighboringPixel = x - halfMatrixSize; j < _matrix.GetLength(0); j++, xNeighboringPixel++)
                     {
                         Color pixel = incomingImage.GetPixel(xNeighboringPixel, yNeighboringPixel);
 
-                        redColor += pixel.R * _convolutionMatrix[i, j];
-                        greenColor += pixel.G * _convolutionMatrix[i, j];
-                        blueColor += pixel.B * _convolutionMatrix[i, j];
+                        redColor += pixel.R * _matrix[i, j];
+                        greenColor += pixel.G * _matrix[i, j];
+                        blueColor += pixel.B * _matrix[i, j];
                     }
                 }
 

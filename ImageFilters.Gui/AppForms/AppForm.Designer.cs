@@ -30,8 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             panelApp = new Panel();
+            conversionProgressPanel = new Panel();
+            conversionProgressLabel = new Label();
             toolStripButtons = new Panel();
-            radioButtonNoise = new RadioButton();
             radioButtonCancel = new RadioButton();
             radioButtonSharpen = new RadioButton();
             radioButton4 = new RadioButton();
@@ -52,14 +53,11 @@
             toolStripSeparator3 = new ToolStripSeparator();
             toolStripMenuExit = new ToolStripMenuItem();
             stripMenuToolItem = new ToolStripMenuItem();
-            toolStripMenuBlur = new ToolStripMenuItem();
-            toolStripMenuBlackAndWhite = new ToolStripMenuItem();
-            toolStripMenuAqua = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             toolStripMenuCancel = new ToolStripMenuItem();
-            настройкиToolStripMenuItem = new ToolStripMenuItem();
             параметрыToolStripMenuItem = new ToolStripMenuItem();
             panelApp.SuspendLayout();
+            conversionProgressPanel.SuspendLayout();
             toolStripButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxOriginalImage).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxResultImage).BeginInit();
@@ -69,6 +67,7 @@
             // panelApp
             // 
             panelApp.BackColor = SystemColors.ActiveBorder;
+            panelApp.Controls.Add(conversionProgressPanel);
             panelApp.Controls.Add(toolStripButtons);
             panelApp.Controls.Add(pictureBoxOriginalImage);
             panelApp.Controls.Add(pictureBoxResultImage);
@@ -80,10 +79,33 @@
             panelApp.Size = new Size(1134, 611);
             panelApp.TabIndex = 0;
             // 
+            // conversionProgressPanel
+            // 
+            conversionProgressPanel.Anchor = AnchorStyles.None;
+            conversionProgressPanel.BackColor = SystemColors.Control;
+            conversionProgressPanel.BackgroundImageLayout = ImageLayout.Center;
+            conversionProgressPanel.BorderStyle = BorderStyle.FixedSingle;
+            conversionProgressPanel.Controls.Add(conversionProgressLabel);
+            conversionProgressPanel.Location = new Point(373, 258);
+            conversionProgressPanel.Name = "conversionProgressPanel";
+            conversionProgressPanel.Size = new Size(261, 121);
+            conversionProgressPanel.TabIndex = 10;
+            conversionProgressPanel.Visible = false;
+            // 
+            // conversionProgressLabel
+            // 
+            conversionProgressLabel.AutoSize = true;
+            conversionProgressLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            conversionProgressLabel.Location = new Point(8, 49);
+            conversionProgressLabel.Name = "conversionProgressLabel";
+            conversionProgressLabel.Size = new Size(248, 21);
+            conversionProgressLabel.TabIndex = 0;
+            conversionProgressLabel.Text = "Идет обработка изображения . . .";
+            conversionProgressLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // toolStripButtons
             // 
             toolStripButtons.BackColor = SystemColors.MenuBar;
-            toolStripButtons.Controls.Add(radioButtonNoise);
             toolStripButtons.Controls.Add(radioButtonCancel);
             toolStripButtons.Controls.Add(radioButtonSharpen);
             toolStripButtons.Controls.Add(radioButton4);
@@ -98,19 +120,6 @@
             toolStripButtons.Size = new Size(362, 74);
             toolStripButtons.TabIndex = 9;
             toolStripButtons.Visible = false;
-            // 
-            // radioButtonNoise
-            // 
-            radioButtonNoise.Appearance = Appearance.Button;
-            radioButtonNoise.AutoSize = true;
-            radioButtonNoise.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonNoise.Location = new Point(174, 39);
-            radioButtonNoise.Name = "radioButtonNoise";
-            radioButtonNoise.Size = new Size(43, 25);
-            radioButtonNoise.TabIndex = 14;
-            radioButtonNoise.Text = "Шум";
-            radioButtonNoise.UseVisualStyleBackColor = true;
-            radioButtonNoise.Click += ButtonClick_Noise;
             // 
             // radioButtonCancel
             // 
@@ -247,7 +256,7 @@
             toolStripMenuOpen.ShortcutKeys = Keys.Control | Keys.O;
             toolStripMenuOpen.Size = new Size(233, 22);
             toolStripMenuOpen.Text = "&Открыть";
-            toolStripMenuOpen.Click += ToolStripMenuOpenFile_Click;
+            toolStripMenuOpen.Click += ToolStripMenuClick_OpenFile;
             // 
             // toolStripSeparator1
             // 
@@ -259,7 +268,7 @@
             toolStripMenuDeleteImage.Enabled = false;
             toolStripMenuDeleteImage.Name = "toolStripMenuDeleteImage";
             toolStripMenuDeleteImage.Size = new Size(233, 22);
-            toolStripMenuDeleteImage.Text = "Удалить изображение";
+            toolStripMenuDeleteImage.Text = "Очистить";
             toolStripMenuDeleteImage.Click += ButtonClick_DeleteImage;
             // 
             // toolStripSeparator
@@ -274,7 +283,8 @@
             toolStripMenuSave.Name = "toolStripMenuSave";
             toolStripMenuSave.ShortcutKeys = Keys.Control | Keys.S;
             toolStripMenuSave.Size = new Size(233, 22);
-            toolStripMenuSave.Text = "&Сохранить";
+            toolStripMenuSave.Text = "&Сохранить как";
+            toolStripMenuSave.Click += ToolStripMenuClick_SaveImage;
             // 
             // toolStripSeparator2
             // 
@@ -283,6 +293,7 @@
             // 
             // предварительныйпросмотрToolStripMenuItem
             // 
+            предварительныйпросмотрToolStripMenuItem.Enabled = false;
             предварительныйпросмотрToolStripMenuItem.Image = (Image)resources.GetObject("предварительныйпросмотрToolStripMenuItem.Image");
             предварительныйпросмотрToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             предварительныйпросмотрToolStripMenuItem.Name = "предварительныйпросмотрToolStripMenuItem";
@@ -303,34 +314,10 @@
             // 
             // stripMenuToolItem
             // 
-            stripMenuToolItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuBlur, toolStripMenuBlackAndWhite, toolStripMenuAqua, toolStripSeparator4, toolStripMenuCancel, настройкиToolStripMenuItem, параметрыToolStripMenuItem });
+            stripMenuToolItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripSeparator4, toolStripMenuCancel, параметрыToolStripMenuItem });
             stripMenuToolItem.Name = "stripMenuToolItem";
             stripMenuToolItem.Size = new Size(95, 24);
             stripMenuToolItem.Text = "&Инструменты";
-            // 
-            // toolStripMenuBlur
-            // 
-            toolStripMenuBlur.Enabled = false;
-            toolStripMenuBlur.Name = "toolStripMenuBlur";
-            toolStripMenuBlur.Size = new Size(196, 22);
-            toolStripMenuBlur.Text = "Размытие";
-            toolStripMenuBlur.Click += ButtonClick_Blur;
-            // 
-            // toolStripMenuBlackAndWhite
-            // 
-            toolStripMenuBlackAndWhite.Enabled = false;
-            toolStripMenuBlackAndWhite.Name = "toolStripMenuBlackAndWhite";
-            toolStripMenuBlackAndWhite.Size = new Size(196, 22);
-            toolStripMenuBlackAndWhite.Text = "Черно-белое";
-            toolStripMenuBlackAndWhite.Click += ButtonClick_BlackWhite;
-            // 
-            // toolStripMenuAqua
-            // 
-            toolStripMenuAqua.Enabled = false;
-            toolStripMenuAqua.Name = "toolStripMenuAqua";
-            toolStripMenuAqua.Size = new Size(196, 22);
-            toolStripMenuAqua.Text = "Акварелизация";
-            toolStripMenuAqua.Click += ButtonClick_Aqua;
             // 
             // toolStripSeparator4
             // 
@@ -344,12 +331,6 @@
             toolStripMenuCancel.Size = new Size(196, 22);
             toolStripMenuCancel.Text = "Сбросить";
             toolStripMenuCancel.Click += ButtonClick_Cancel;
-            // 
-            // настройкиToolStripMenuItem
-            // 
-            настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            настройкиToolStripMenuItem.Size = new Size(196, 22);
-            настройкиToolStripMenuItem.Text = "&Настройки";
             // 
             // параметрыToolStripMenuItem
             // 
@@ -370,6 +351,8 @@
             Text = "App";
             panelApp.ResumeLayout(false);
             panelApp.PerformLayout();
+            conversionProgressPanel.ResumeLayout(false);
+            conversionProgressPanel.PerformLayout();
             toolStripButtons.ResumeLayout(false);
             toolStripButtons.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxOriginalImage).EndInit();
@@ -396,13 +379,9 @@
         private ToolStripMenuItem stripMenuToolItem;
 
         private ToolStripMenuItem предварительныйпросмотрToolStripMenuItem;
-        private ToolStripMenuItem настройкиToolStripMenuItem;
         private ToolStripMenuItem параметрыToolStripMenuItem;
 
         private ToolStripMenuItem toolStripMenuDeleteImage;
-        private ToolStripMenuItem toolStripMenuBlur;
-        private ToolStripMenuItem toolStripMenuBlackAndWhite;
-        private ToolStripMenuItem toolStripMenuAqua;
 
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
@@ -417,6 +396,7 @@
         private ToolStripMenuItem toolStripMenuCancel;
         private RadioButton radioButtonSharpen;
         private RadioButton radioButtonCancel;
-        private RadioButton radioButtonNoise;
+        private Panel conversionProgressPanel;
+        private Label conversionProgressLabel;
     }
 }

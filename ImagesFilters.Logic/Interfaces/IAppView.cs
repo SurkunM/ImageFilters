@@ -2,7 +2,5 @@
 
 public interface IAppView
 {    
-    void SetPictureBoxImage(Bitmap image);
-
-    void CreateFiltersDictionary();
+    void SetPictureBoxImage(Bitmap image);     
 }

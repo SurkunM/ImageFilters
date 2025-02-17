@@ -9,12 +9,7 @@ internal class Sharpen : IFilter
 
     public Sharpen()
     {
-        _sharpnessIncreaseMatrix = new int[3, 3]
-        {
-            {0, -1, 0 },
-            {-1, 5, -1},
-            {0, -1, 0 }
-        };
+        _sharpnessIncreaseMatrix = MatrixComponents.GetSharpnessIncreaseMatrix();
     }
 
     public Bitmap Convert(Bitmap incomingImage)
