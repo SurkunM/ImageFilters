@@ -278,13 +278,14 @@
             // 
             // toolStripMenuSave
             // 
+            toolStripMenuSave.Enabled = false;
             toolStripMenuSave.Image = (Image)resources.GetObject("toolStripMenuSave.Image");
             toolStripMenuSave.ImageTransparentColor = Color.Magenta;
             toolStripMenuSave.Name = "toolStripMenuSave";
             toolStripMenuSave.ShortcutKeys = Keys.Control | Keys.S;
             toolStripMenuSave.Size = new Size(233, 22);
             toolStripMenuSave.Text = "&Сохранить как";
-            toolStripMenuSave.Click += ToolStripMenuClick_SaveImage;
+            toolStripMenuSave.Click += ToolStripMenuClick_SaveFile;
             // 
             // toolStripSeparator2
             // 

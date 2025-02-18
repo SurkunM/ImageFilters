@@ -8,7 +8,7 @@ public class AppLogic : IAppLogic
 {
     public Dictionary<FiltersKey, IFilter> Filters { get; }
 
-    public Dictionary<FiltersKey, bool> _isFilterUsed = default!;      
+    public Dictionary<FiltersKey, bool> _isFilterUsed = default!;
 
     public AppLogic()
     {
@@ -22,19 +22,31 @@ public class AppLogic : IAppLogic
             {FiltersKey.BlackAndWhite, new BlackAndWhite()}
         };
 
-        CreateFiltersDictionary();
-    }
+        var filtersKeysCount = Enum.GetValues(typeof(FiltersKey)).Length;
 
-    public Bitmap ConvertTo(Bitmap incomingImage, IFilter filter)
-    {
-        return filter.Convert(incomingImage);
+        if (Filters.Count != filtersKeysCount)
+        {
+            throw new ArgumentException("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
+        }
+
+        CreateUsedFiltersDictionary();
     }
 
     public Bitmap ConvertTo(Bitmap incomingImage, FiltersKey key)
     {
+        if (Filters[key] is null)
+        {
+            throw new ArgumentNullException($"Фильтра с ключом ({key}) не существует");
+        }
+
         if (IsFilterUsed(key))
         {
             return incomingImage;
+        }
+
+        if (key.Equals(FiltersKey.Original))
+        {
+            CreateUsedFiltersDictionary();
         }
 
         return Filters[key].Convert(incomingImage);
@@ -52,7 +64,7 @@ public class AppLogic : IAppLogic
         return true;
     }
 
-    private void CreateFiltersDictionary()
+    public void CreateUsedFiltersDictionary()
     {
         _isFilterUsed = new Dictionary<FiltersKey, bool>();
 

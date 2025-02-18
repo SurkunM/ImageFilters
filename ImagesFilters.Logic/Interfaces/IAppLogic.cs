@@ -1,8 +1,11 @@
-﻿using ImagesFilters.Logic.Model.Filters;
+﻿using ImagesFilters.Logic.Model.Components;
+using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Interfaces;
 
 internal interface IAppLogic
 {
-    Bitmap ConvertTo(Bitmap incomingImage, IFilter filter);          
+    public Dictionary<FiltersKey, IFilter> Filters { get; }
+
+    Bitmap ConvertTo(Bitmap incomingImage, FiltersKey filter);          
 }

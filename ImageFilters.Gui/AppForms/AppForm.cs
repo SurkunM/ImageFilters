@@ -45,7 +45,7 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
             pictureBoxOriginalImage.Image = _originalImage;
             pictureBoxResultImage.Image = _currentImage;
 
-            StripMenuButtonsEnable(true);
+            SetStripMenuButtonsEnable(true);
             toolStripButtons.Visible = true;
         }
         catch (ArgumentNullException)
@@ -59,7 +59,7 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
         }
     }
 
-    private void ToolStripMenuClick_SaveImage(object sender, EventArgs e)
+    private void ToolStripMenuClick_SaveFile(object sender, EventArgs e)
     {
         var saveImageDialog = new SaveFileDialog();
 
@@ -90,9 +90,10 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
 
         _currentImage = image;
         pictureBoxResultImage.Image = _currentImage;
+        toolStripMenuSave.Enabled = true;
     }
 
-    private void StripMenuButtonsEnable(bool isEnable)
+    private void SetStripMenuButtonsEnable(bool isEnable)
     {
         toolStripButtons.Enabled = isEnable;
         toolStripMenuDeleteImage.Enabled = isEnable;
@@ -101,7 +102,7 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
 
     public void SetVisibleProgressPanel(bool isVisible)
     {
-        conversionProgressPanel.Visible = isVisible;      
+        conversionProgressPanel.Visible = isVisible;
     }
 
     public void IsFormEnabled(bool isEnable)
@@ -142,8 +143,9 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
 
             toolStripMenuDeleteImage.Enabled = false;
             toolStripButtons.Enabled = false;
+            toolStripMenuSave.Enabled = false;
 
-            StripMenuButtonsEnable(false);
+            SetStripMenuButtonsEnable(false);
         }
     }
 
