@@ -1,7 +1,6 @@
 ﻿using ImagesFilters.Logic.Interfaces;
 using ImagesFilters.Logic.Model;
 using ImagesFilters.Logic.Model.Components;
-using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Controller;
 
@@ -17,7 +16,7 @@ public class AppPresenter
         _appView = view;
     }
 
-    public void SetOriginalImage(Bitmap incomingImage)
+    public void SetOriginalImageFilter(Bitmap incomingImage)
     {
         if (incomingImage is null)
         {
@@ -28,28 +27,39 @@ public class AppPresenter
         SetViewPictureBoxImage(resultImage);
     }
 
-    public void SetFilterAsync(Bitmap incomingImage, FiltersKey filterKey)
+    public void SetFilter(Bitmap incomingImage, FiltersKey filterKey)
     {
         if (incomingImage is null)
         {
             throw new ArgumentNullException(nameof(incomingImage));
         }
 
-        var asyncConversionView = (IAsyncConversionApp)_appView;
+        if (_appView is null)
+        {
+            throw new ArgumentNullException(nameof(_appView));
+        }
+
         Bitmap? resultImage = null;
 
-        var thread = new Thread(() =>
+        if (_appView is IAsyncConversionAppView asyncConversionView)
+        {
+            var thread = new Thread(() =>
+            {
+                resultImage = _logic.ConvertTo(incomingImage, filterKey);
+            });
+
+            asyncConversionView.IsFormEnabled(false);
+            asyncConversionView.SetVisibleProgressPanel(true);
+            thread.Start();
+
+            thread.Join();
+            asyncConversionView.IsFormEnabled(true);
+            asyncConversionView.SetVisibleProgressPanel(false);
+        }
+        else
         {
             resultImage = _logic.ConvertTo(incomingImage, filterKey);
-        });
-
-        asyncConversionView.IsFormEnabled(false);
-        asyncConversionView.SetVisibleProgressPanel(true);
-        thread.Start();
-
-        thread.Join();
-        asyncConversionView.IsFormEnabled(true);
-        asyncConversionView.SetVisibleProgressPanel(false);
+        }
 
         if (resultImage is not null)
         {

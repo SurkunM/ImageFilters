@@ -5,7 +5,7 @@ namespace ImagesFilters.Logic.Interfaces;
 
 internal interface IAppLogic
 {
-    public Dictionary<FiltersKey, IFilter> Filters { get; }
+    Dictionary<FiltersKey, IFilter> Filters { get; }
 
     Bitmap ConvertTo(Bitmap incomingImage, FiltersKey filter);          
 }

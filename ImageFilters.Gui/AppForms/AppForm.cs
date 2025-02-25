@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace ImagesFilters;
 
-public partial class AppForm : Form, IAppView, IAsyncConversionApp
+public partial class AppForm : Form, IAppView, IAsyncConversionAppView
 {
     private string _fileName = "";
 
@@ -155,34 +155,34 @@ public partial class AppForm : Form, IAppView, IAsyncConversionApp
 
         if (result == DialogResult.Yes)
         {
-            Presenter.SetOriginalImage(_originalImage);
+            Presenter.SetOriginalImageFilter(_originalImage);
         }
     }
 
     private void ButtonClick_Blur(object sender, EventArgs e)
     {
-        Presenter.SetFilterAsync(_currentImage, FiltersKey.Blur);
+        Presenter.SetFilter(_currentImage, FiltersKey.Blur);
     }
 
     private void ButtonClick_BlackWhite(object sender, EventArgs e)
     {
-        Presenter.SetFilterAsync(_currentImage, FiltersKey.BlackAndWhite);
+        Presenter.SetFilter(_currentImage, FiltersKey.BlackAndWhite);
 
     }
 
     private void ButtonClick_Aqua(object sender, EventArgs e)
     {
-        Presenter.SetFilterAsync(_currentImage, FiltersKey.Aqua);
+        Presenter.SetFilter(_currentImage, FiltersKey.Aqua);
     }
 
     private void ButtonClick_Embossing(object sender, EventArgs e)
     {
-        Presenter.SetFilterAsync(_currentImage, FiltersKey.Embossing);
+        Presenter.SetFilter(_currentImage, FiltersKey.Embossing);
     }
 
     private void ButtonClick_Sharpen(object sender, EventArgs e)
     {
-        Presenter.SetFilterAsync(_currentImage, FiltersKey.Sharpen);
+        Presenter.SetFilter(_currentImage, FiltersKey.Sharpen);
     }
 
     private void ButtonClick_Exit(object sender, EventArgs e)
