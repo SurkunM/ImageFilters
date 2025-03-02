@@ -4,18 +4,20 @@ using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Model;
 
-public class AppLogic : IAppLogic
+public class AppLogic : IAppLogic, IAsyncConversionAppLogic
 {
+    public Dictionary<FiltersKey, bool> _isFilterUsed = default!;
+
     public Dictionary<FiltersKey, IFilter> Filters { get; }
 
-    public Dictionary<FiltersKey, bool> _isFilterUsed = default!;
+    public FiltersKey UsedFilterKey { private get; set; } = default!;
 
     public AppLogic()
     {
         Filters = new Dictionary<FiltersKey, IFilter>
         {
             {FiltersKey.Original, new Original()},
-            {FiltersKey.Blur, new Blur(5)},
+            {FiltersKey.Blur, new Blur()},
             {FiltersKey.Sharpen, new Sharpen()},
             {FiltersKey.Aqua, new Aqua()},
             {FiltersKey.Embossing, new Embossing()},
@@ -26,37 +28,49 @@ public class AppLogic : IAppLogic
 
         if (Filters.Count != filtersKeysCount)
         {
-            throw new ArgumentException("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
+            throw new Exception("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
         }
 
-        CreateUsedFiltersDictionary();
+        CreateIsUnusedFiltersDictionary();
     }
 
-    public Bitmap ConvertTo(Bitmap incomingImage, FiltersKey key)
+    public Bitmap ConvertTo(Bitmap incomingImage)
     {
-        if (Filters[key] is null)
-        {
-            throw new ArgumentNullException($"Фильтра с ключом ({key}) не существует");
-        }
-
-        if (IsFilterUsed(key))
+        if (IsFilterUsed())
         {
             return incomingImage;
         }
 
-        if (key.Equals(FiltersKey.Original))
+        if (UsedFilterKey.Equals(FiltersKey.Original))
         {
-            CreateUsedFiltersDictionary();
+            CreateIsUnusedFiltersDictionary();
         }
 
-        return Filters[key].Convert(incomingImage);
+        return Filters[UsedFilterKey].Convert(incomingImage);
     }
 
-    private bool IsFilterUsed(FiltersKey key)
+    public async Task<Bitmap> ConvertToAsync(Bitmap incomingImage)
     {
-        if (!_isFilterUsed[key] || key.Equals(FiltersKey.Blur) || key.Equals(FiltersKey.Sharpen))
+        Bitmap? resultImage = null;
+
+        await Task.Run(() =>
         {
-            _isFilterUsed[key] = true;
+            resultImage = ConvertTo(incomingImage);
+        });
+
+        return resultImage!;
+    }
+
+    private bool IsFilterUsed()
+    {
+        if (UsedFilterKey.Equals(FiltersKey.Blur) || UsedFilterKey.Equals(FiltersKey.Sharpen))
+        {
+            return false;
+        }
+
+        if (!_isFilterUsed[UsedFilterKey])
+        {
+            _isFilterUsed[UsedFilterKey] = true;
 
             return false;
         }
@@ -64,7 +78,7 @@ public class AppLogic : IAppLogic
         return true;
     }
 
-    public void CreateUsedFiltersDictionary()
+    public void CreateIsUnusedFiltersDictionary()
     {
         _isFilterUsed = new Dictionary<FiltersKey, bool>();
 

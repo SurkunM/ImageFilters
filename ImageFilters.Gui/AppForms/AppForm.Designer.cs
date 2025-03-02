@@ -268,7 +268,7 @@
             toolStripMenuDeleteImage.Enabled = false;
             toolStripMenuDeleteImage.Name = "toolStripMenuDeleteImage";
             toolStripMenuDeleteImage.Size = new Size(233, 22);
-            toolStripMenuDeleteImage.Text = "Очистить";
+            toolStripMenuDeleteImage.Text = "Удалить изображение";
             toolStripMenuDeleteImage.Click += ButtonClick_DeleteImage;
             // 
             // toolStripSeparator

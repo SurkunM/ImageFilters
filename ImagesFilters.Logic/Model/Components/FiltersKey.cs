@@ -2,10 +2,10 @@
 
 public enum FiltersKey
 {
-    Original = 1,
-    Blur = 2,
-    Aqua = 3,
-    BlackAndWhite = 4,
-    Embossing = 5,
-    Sharpen = 6
+    Original = 0,
+    Blur = 1,
+    Aqua = 2,
+    BlackAndWhite = 3,
+    Embossing = 4,
+    Sharpen = 5
 }

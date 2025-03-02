@@ -10,7 +10,7 @@ internal class Embossing : IFilter
 
     public Embossing()
     {
-        _matrix = MatrixComponents.GetEmbossingMatrix();
+        _matrix = GetEmbossingMatrix();
 
         _blackAndWhiteFilter = new BlackAndWhite();
     }
@@ -52,5 +52,17 @@ internal class Embossing : IFilter
         }
 
         return resultImage;
+    }
+
+    public static int[,] GetEmbossingMatrix()
+    {
+        int[,] matrix = new int[3, 3]
+        {
+            { 0, 1, 0 },
+            { -1, 0, 1},
+            { 0, -1, 0}
+        };
+
+        return matrix;
     }
 }

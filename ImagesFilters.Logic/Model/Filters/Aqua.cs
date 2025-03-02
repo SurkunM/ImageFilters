@@ -10,9 +10,8 @@ internal class Aqua : IFilter
 
     public Aqua()
     {
-        _sharpnessIncreaseMatrix = MatrixComponents.GetSharpnessIncreaseMatrix();
+        _sharpnessIncreaseMatrix = GetSharpnessIncreaseMatrix();
     }
-
 
     public Bitmap Convert(Bitmap incomingImage)
     {
@@ -96,5 +95,17 @@ internal class Aqua : IFilter
         }
 
         return resultImage;
+    }
+
+    public static int[,] GetSharpnessIncreaseMatrix()
+    {
+        int[,] matrix = new int[3, 3]
+        {
+            {0, -1, 0 },
+            {-1, 5, -1},
+            {0, -1, 0 }
+        };
+
+        return matrix;
     }
 }

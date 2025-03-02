@@ -30,15 +30,15 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
             return;
         }
 
+        if (Presenter is null)
+        {
+            throw new NullReferenceException(nameof(Presenter));
+        }
+
+        _fileName = openFileDialog.FileName;
+
         try
         {
-            if (Presenter is null)
-            {
-                throw new ArgumentNullException(nameof(Presenter));
-            }
-
-            _fileName = openFileDialog.FileName;
-
             _originalImage = new Bitmap(_fileName);
             _currentImage = _originalImage;
 
@@ -48,11 +48,7 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
             SetStripMenuButtonsEnable(true);
             toolStripButtons.Visible = true;
         }
-        catch (ArgumentNullException)
-        {
-            throw;
-        }
-        catch (ArgumentException)
+        catch (Exception)
         {
             _fileName = "";
             MessageBox.Show("Не удалось открыть файл", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -74,7 +70,7 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
             {
                 _currentImage.Save(saveImageDialog.FileName, ImageFormat.Jpeg);
             }
-            catch
+            catch (Exception)
             {
                 MessageBox.Show("Невозможно сохранить изображение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -105,19 +101,22 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
         conversionProgressPanel.Visible = isVisible;
     }
 
-    public void IsFormEnabled(bool isEnable)
+    public void IsFormEnabled(bool isDisable)
     {
-        if (!isEnable)
+        if (isDisable)
         {
             panelApp.Cursor = Cursors.WaitCursor;
+
+            menuStrip.Enabled = false;
+            panelApp.Enabled = false;
         }
         else
         {
             panelApp.Cursor = Cursors.Default;
-        }
 
-        menuStrip.Enabled = isEnable;
-        panelApp.Enabled = isEnable;
+            menuStrip.Enabled = true;
+            panelApp.Enabled = true;
+        }
     }
 
     private void ButtonClick_SetToolBar(object sender, EventArgs e)
@@ -155,34 +154,40 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
 
         if (result == DialogResult.Yes)
         {
+            Presenter.FilterKey = FiltersKey.Original;
             Presenter.SetOriginalImageFilter(_originalImage);
         }
     }
 
     private void ButtonClick_Blur(object sender, EventArgs e)
     {
-        Presenter.SetFilter(_currentImage, FiltersKey.Blur);
+        Presenter.FilterKey = FiltersKey.Blur;
+        Presenter.SetFilter(_currentImage);
     }
 
     private void ButtonClick_BlackWhite(object sender, EventArgs e)
     {
-        Presenter.SetFilter(_currentImage, FiltersKey.BlackAndWhite);
+        Presenter.FilterKey = FiltersKey.BlackAndWhite;
+        Presenter.SetFilter(_currentImage);
 
     }
 
     private void ButtonClick_Aqua(object sender, EventArgs e)
     {
-        Presenter.SetFilter(_currentImage, FiltersKey.Aqua);
+        Presenter.FilterKey = FiltersKey.Aqua;
+        Presenter.SetFilter(_currentImage);
     }
 
     private void ButtonClick_Embossing(object sender, EventArgs e)
     {
-        Presenter.SetFilter(_currentImage, FiltersKey.Embossing);
+        Presenter.FilterKey = FiltersKey.Embossing;
+        Presenter.SetFilter(_currentImage);
     }
 
     private void ButtonClick_Sharpen(object sender, EventArgs e)
     {
-        Presenter.SetFilter(_currentImage, FiltersKey.Sharpen);
+        Presenter.FilterKey = FiltersKey.Sharpen;
+        Presenter.SetFilter(_currentImage);
     }
 
     private void ButtonClick_Exit(object sender, EventArgs e)

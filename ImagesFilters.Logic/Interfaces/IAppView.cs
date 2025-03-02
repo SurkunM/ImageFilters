@@ -3,4 +3,6 @@
 public interface IAppView
 {
     void SetPictureBoxImage(Bitmap image);
+
+    void IsFormEnabled(bool isEnable);
 }

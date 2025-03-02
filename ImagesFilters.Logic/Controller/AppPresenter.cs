@@ -10,6 +10,8 @@ public class AppPresenter
 
     private readonly IAppView _appView;
 
+    public FiltersKey FilterKey { private get; set; } = default!;
+
     public AppPresenter(AppLogic logic, IAppView view)
     {
         _logic = logic;
@@ -23,11 +25,13 @@ public class AppPresenter
             throw new ArgumentNullException(nameof(incomingImage));
         }
 
-        var resultImage = _logic.ConvertTo(incomingImage, FiltersKey.Original);
+        _logic.UsedFilterKey = FilterKey;
+
+        var resultImage = _logic.ConvertTo(incomingImage);
         SetViewPictureBoxImage(resultImage);
     }
 
-    public void SetFilter(Bitmap incomingImage, FiltersKey filterKey)
+    public async void SetFilter(Bitmap incomingImage)
     {
         if (incomingImage is null)
         {
@@ -36,39 +40,39 @@ public class AppPresenter
 
         if (_appView is null)
         {
-            throw new ArgumentNullException(nameof(_appView));
+            throw new NullReferenceException(nameof(_appView));
         }
 
-        Bitmap? resultImage = null;
+        _logic.UsedFilterKey = FilterKey;
+        SetProgressLoad(true);
 
-        if (_appView is IAsyncConversionAppView asyncConversionView)
+        Bitmap resultImage;
+
+        if (_logic is IAsyncConversionAppLogic asyncConversionLogic)
         {
-            var thread = new Thread(() =>
-            {
-                resultImage = _logic.ConvertTo(incomingImage, filterKey);
-            });
-
-            asyncConversionView.IsFormEnabled(false);
-            asyncConversionView.SetVisibleProgressPanel(true);
-            thread.Start();
-
-            thread.Join();
-            asyncConversionView.IsFormEnabled(true);
-            asyncConversionView.SetVisibleProgressPanel(false);
+            resultImage = await asyncConversionLogic.ConvertToAsync(incomingImage);
         }
         else
         {
-            resultImage = _logic.ConvertTo(incomingImage, filterKey);
+            resultImage = _logic.ConvertTo(incomingImage);
         }
 
-        if (resultImage is not null)
-        {
-            SetViewPictureBoxImage(resultImage);
-        }
+        SetProgressLoad(false);
+        SetViewPictureBoxImage(resultImage);
     }
 
     private void SetViewPictureBoxImage(Bitmap image)
     {
         _appView.SetPictureBoxImage(image);
+    }
+
+    private void SetProgressLoad(bool isLoad)
+    {
+        if (_appView is IAsyncConversionAppView asyncConversionView)
+        {
+            asyncConversionView.SetVisibleProgressPanel(isLoad);
+        }
+
+        _appView.IsFormEnabled(isLoad);
     }
 }

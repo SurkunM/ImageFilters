@@ -7,5 +7,7 @@ internal interface IAppLogic
 {
     Dictionary<FiltersKey, IFilter> Filters { get; }
 
-    Bitmap ConvertTo(Bitmap incomingImage, FiltersKey filter);          
+    FiltersKey UsedFilterKey { set; }
+
+    Bitmap ConvertTo(Bitmap incomingImage);
 }

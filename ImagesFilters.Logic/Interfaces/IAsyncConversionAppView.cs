@@ -2,7 +2,5 @@
 
 public interface IAsyncConversionAppView
 {
-    void SetVisibleProgressPanel(bool isVisible);
-
-    void IsFormEnabled(bool isEnable);
+    void SetVisibleProgressPanel(bool isVisible);    
 }
