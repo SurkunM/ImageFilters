@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace ImagesFilters;
 
-public partial class AppForm : Form, IAppView, IAsyncConversionAppView
+public partial class AppForm : Form, IAsyncAppView
 {
     private string _fileName = "";
 
@@ -77,11 +77,13 @@ public partial class AppForm : Form, IAppView, IAsyncConversionAppView
         }
     }
 
-    public void SetPictureBoxImage(Bitmap image)
+    public void SetPictureBoxImage(Bitmap? image)
     {
         if (image is null)
         {
-            throw new ArgumentNullException(nameof(image));
+            MessageBox.Show("Изображение не передано в окно отображения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            return;
         }
 
         _currentImage = image;

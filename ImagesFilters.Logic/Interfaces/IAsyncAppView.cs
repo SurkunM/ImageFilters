@@ -1,6 +1,6 @@
 ﻿namespace ImagesFilters.Logic.Interfaces;
 
-public interface IAsyncConversionAppView
+public interface IAsyncAppView : IAppView
 {
     void SetVisibleProgressPanel(bool isVisible);    
 }

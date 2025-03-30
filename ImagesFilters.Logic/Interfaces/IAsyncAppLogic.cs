@@ -1,6 +1,6 @@
 ﻿namespace ImagesFilters.Logic.Interfaces;
 
-internal interface IAsyncConversionAppLogic
+public interface IAsyncAppLogic : IAppLogic
 {
     Task<Bitmap> ConvertToAsync(Bitmap incomingImage);
 }

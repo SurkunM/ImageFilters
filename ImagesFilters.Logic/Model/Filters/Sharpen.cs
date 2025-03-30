@@ -1,5 +1,4 @@
-﻿
-using ImagesFilters.Logic.Model.Components;
+﻿using ImagesFilters.Logic.Model.Components;
 
 namespace ImagesFilters.Logic.Model.Filters;
 

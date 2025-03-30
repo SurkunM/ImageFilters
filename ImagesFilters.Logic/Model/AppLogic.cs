@@ -4,7 +4,7 @@ using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Model;
 
-public class AppLogic : IAppLogic, IAsyncConversionAppLogic
+public class AppLogic : IAsyncAppLogic
 {
     public Dictionary<FiltersKey, bool> _isFilterUsed = default!;
 
