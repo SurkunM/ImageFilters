@@ -7,7 +7,7 @@ internal class Blur : IFilter
     private readonly double[,] _convolutionMatrix;
 
     public Blur()
-    {       
+    {
         _convolutionMatrix = GetMatrix(5);
     }
 
@@ -50,7 +50,7 @@ internal class Blur : IFilter
         return resultImage;
     }
 
-    public static double[,] GetMatrix(int matrixSize)
+    private static double[,] GetMatrix(int matrixSize)
     {
         double[,] matrix = new double[matrixSize, matrixSize];
         double ratio = 1.0 / matrix.Length;

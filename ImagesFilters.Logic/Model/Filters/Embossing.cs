@@ -54,7 +54,7 @@ internal class Embossing : IFilter
         return resultImage;
     }
 
-    public static int[,] GetEmbossingMatrix()
+    private static int[,] GetEmbossingMatrix()
     {
         int[,] matrix = new int[3, 3]
         {

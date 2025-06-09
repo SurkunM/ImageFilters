@@ -51,7 +51,7 @@ internal class Sharpen : IFilter
         return resultImage;
     }
 
-    public static int[,] GetSharpnessIncreaseMatrix()
+    private static int[,] GetSharpnessIncreaseMatrix()
     {
         int[,] matrix = new int[3, 3]
         {
