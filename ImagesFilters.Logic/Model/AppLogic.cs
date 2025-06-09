@@ -4,13 +4,13 @@ using ImagesFilters.Logic.Model.Filters;
 
 namespace ImagesFilters.Logic.Model;
 
-public class AppLogic : IAsyncAppLogic
+public class AppLogic : IAppLogic
 {
-    public Dictionary<FiltersKey, bool> _isFilterUsed = default!;
-
     public Dictionary<FiltersKey, IFilter> Filters { get; }
 
-    public FiltersKey UsedFilterKey { private get; set; } = default!;
+    public FiltersKey UsedFilterKey { private get; set; }
+
+    private Dictionary<FiltersKey, bool> _usedFilters = new Dictionary<FiltersKey, bool>();
 
     public AppLogic()
     {
@@ -31,60 +31,33 @@ public class AppLogic : IAsyncAppLogic
             throw new Exception("Не все фильтры инициализированы или добавлены в 'FiltersKey'");
         }
 
-        CreateIsUnusedFiltersDictionary();
+        SetFiltersUnused();
     }
 
     public Bitmap ConvertTo(Bitmap incomingImage)
     {
-        if (IsFilterUsed())
+        if (_usedFilters[UsedFilterKey] && (UsedFilterKey != FiltersKey.Blur && UsedFilterKey != FiltersKey.Sharpen))
         {
             return incomingImage;
         }
 
-        if (UsedFilterKey.Equals(FiltersKey.Original))
+        if (UsedFilterKey == FiltersKey.Original)
         {
-            CreateIsUnusedFiltersDictionary();
+            SetFiltersUnused();
+        }
+        else
+        {
+            _usedFilters[UsedFilterKey] = true;
         }
 
         return Filters[UsedFilterKey].Convert(incomingImage);
     }
 
-    public async Task<Bitmap> ConvertToAsync(Bitmap incomingImage)
+    public void SetFiltersUnused()
     {
-        Bitmap? resultImage = null;
-
-        await Task.Run(() =>
-        {
-            resultImage = ConvertTo(incomingImage);
-        });
-
-        return resultImage!;
-    }
-
-    private bool IsFilterUsed()
-    {
-        if (UsedFilterKey.Equals(FiltersKey.Blur) || UsedFilterKey.Equals(FiltersKey.Sharpen))
-        {
-            return false;
-        }
-
-        if (!_isFilterUsed[UsedFilterKey])
-        {
-            _isFilterUsed[UsedFilterKey] = true;
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public void CreateIsUnusedFiltersDictionary()
-    {
-        _isFilterUsed = new Dictionary<FiltersKey, bool>();
-
         foreach (FiltersKey key in Filters.Keys)
         {
-            _isFilterUsed[key] = false;
+            _usedFilters[key] = false;
         }
     }
 }

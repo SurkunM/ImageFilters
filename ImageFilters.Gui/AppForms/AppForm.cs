@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace ImagesFilters;
 
-public partial class AppForm : Form, IAsyncAppView
+public partial class AppForm : Form, IAppView
 {
     private string _fileName = "";
 
@@ -91,13 +91,6 @@ public partial class AppForm : Form, IAsyncAppView
         toolStripMenuSave.Enabled = true;
     }
 
-    private void SetStripMenuButtonsEnable(bool isEnable)
-    {
-        toolStripButtons.Enabled = isEnable;
-        toolStripMenuDeleteImage.Enabled = isEnable;
-        toolStripMenuCancel.Enabled = isEnable;
-    }
-
     public void SetVisibleProgressPanel(bool isVisible)
     {
         conversionProgressPanel.Visible = isVisible;
@@ -119,6 +112,13 @@ public partial class AppForm : Form, IAsyncAppView
             menuStrip.Enabled = true;
             panelApp.Enabled = true;
         }
+    }
+
+    private void SetStripMenuButtonsEnable(bool isEnable)
+    {
+        toolStripButtons.Enabled = isEnable;
+        toolStripMenuDeleteImage.Enabled = isEnable;
+        toolStripMenuCancel.Enabled = isEnable;
     }
 
     private void ButtonClick_SetToolBar(object sender, EventArgs e)
@@ -157,7 +157,7 @@ public partial class AppForm : Form, IAsyncAppView
         if (result == DialogResult.Yes)
         {
             Presenter.FilterKey = FiltersKey.Original;
-            Presenter.SetOriginalImageFilter(_originalImage);
+            Presenter.SetOriginalImage(_originalImage);
         }
     }
 

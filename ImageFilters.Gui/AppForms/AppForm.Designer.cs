@@ -117,7 +117,7 @@
             toolStripButtons.Margin = new Padding(0);
             toolStripButtons.Name = "toolStripButtons";
             toolStripButtons.Padding = new Padding(5);
-            toolStripButtons.Size = new Size(362, 74);
+            toolStripButtons.Size = new Size(287, 75);
             toolStripButtons.TabIndex = 9;
             toolStripButtons.Visible = false;
             // 
@@ -125,13 +125,14 @@
             // 
             radioButtonCancel.Appearance = Appearance.Button;
             radioButtonCancel.AutoSize = true;
+            radioButtonCancel.BackColor = SystemColors.GradientActiveCaption;
             radioButtonCancel.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonCancel.Location = new Point(281, 8);
+            radioButtonCancel.Location = new Point(186, 8);
             radioButtonCancel.Name = "radioButtonCancel";
             radioButtonCancel.Size = new Size(70, 25);
             radioButtonCancel.TabIndex = 13;
             radioButtonCancel.Text = "Сбросить";
-            radioButtonCancel.UseVisualStyleBackColor = true;
+            radioButtonCancel.UseVisualStyleBackColor = false;
             radioButtonCancel.Click += ButtonClick_Cancel;
             // 
             // radioButtonSharpen
@@ -139,7 +140,7 @@
             radioButtonSharpen.Appearance = Appearance.Button;
             radioButtonSharpen.AutoSize = true;
             radioButtonSharpen.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonSharpen.Location = new Point(8, 39);
+            radioButtonSharpen.Location = new Point(115, 8);
             radioButtonSharpen.Name = "radioButtonSharpen";
             radioButtonSharpen.Size = new Size(65, 25);
             radioButtonSharpen.TabIndex = 12;
@@ -151,7 +152,7 @@
             // 
             radioButton4.Appearance = Appearance.Button;
             radioButton4.CheckAlign = ContentAlignment.TopCenter;
-            radioButton4.Location = new Point(79, 8);
+            radioButton4.Location = new Point(185, 39);
             radioButton4.Name = "radioButton4";
             radioButton4.Size = new Size(90, 25);
             radioButton4.TabIndex = 11;
@@ -165,7 +166,7 @@
             radioButtonAqua.Appearance = Appearance.Button;
             radioButtonAqua.AutoSize = true;
             radioButtonAqua.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonAqua.Location = new Point(174, 8);
+            radioButtonAqua.Location = new Point(8, 39);
             radioButtonAqua.Name = "radioButtonAqua";
             radioButtonAqua.Size = new Size(101, 25);
             radioButtonAqua.TabIndex = 10;
@@ -176,13 +177,12 @@
             // radioButtonBlackAndWhite
             // 
             radioButtonBlackAndWhite.Appearance = Appearance.Button;
-            radioButtonBlackAndWhite.AutoSize = true;
             radioButtonBlackAndWhite.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonBlackAndWhite.Location = new Point(79, 39);
+            radioButtonBlackAndWhite.Location = new Point(8, 8);
             radioButtonBlackAndWhite.Name = "radioButtonBlackAndWhite";
-            radioButtonBlackAndWhite.Size = new Size(90, 25);
+            radioButtonBlackAndWhite.Size = new Size(101, 25);
             radioButtonBlackAndWhite.TabIndex = 9;
-            radioButtonBlackAndWhite.Text = "Черно-белое";
+            radioButtonBlackAndWhite.Text = " Черно-белое ";
             radioButtonBlackAndWhite.UseVisualStyleBackColor = true;
             radioButtonBlackAndWhite.Click += ButtonClick_BlackWhite;
             // 
@@ -191,7 +191,7 @@
             radioButtonBlur.Appearance = Appearance.Button;
             radioButtonBlur.AutoSize = true;
             radioButtonBlur.CheckAlign = ContentAlignment.TopCenter;
-            radioButtonBlur.Location = new Point(8, 8);
+            radioButtonBlur.Location = new Point(115, 39);
             radioButtonBlur.Name = "radioButtonBlur";
             radioButtonBlur.Size = new Size(64, 25);
             radioButtonBlur.TabIndex = 8;

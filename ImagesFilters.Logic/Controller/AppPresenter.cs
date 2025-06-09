@@ -5,24 +5,21 @@ namespace ImagesFilters.Logic.Controller;
 
 public class AppPresenter
 {
-    private readonly IAsyncAppLogic _logic;
+    private readonly IAppLogic _logic;
 
-    private readonly IAsyncAppView _appView;
+    private readonly IAppView _appView;
 
     public FiltersKey FilterKey { private get; set; } = default!;
 
-    public AppPresenter(IAsyncAppLogic logic, IAsyncAppView view)
+    public AppPresenter(IAppLogic logic, IAppView view)
     {
         _logic = logic;
         _appView = view;
     }
 
-    public void SetOriginalImageFilter(Bitmap incomingImage)
+    public void SetOriginalImage(Bitmap incomingImage)
     {
-        if (incomingImage is null)
-        {
-            throw new ArgumentNullException(nameof(incomingImage));
-        }
+        ArgumentNullException.ThrowIfNull(incomingImage);
 
         _logic.UsedFilterKey = FilterKey;
 
@@ -30,12 +27,9 @@ public class AppPresenter
         SetViewPictureBoxImage(resultImage);
     }
 
-    public async void SetFilter(Bitmap incomingImage)
+    public void SetFilter(Bitmap incomingImage)
     {
-        if (incomingImage is null)
-        {
-            throw new ArgumentNullException(nameof(incomingImage));
-        }
+        ArgumentNullException.ThrowIfNull(incomingImage);
 
         if (_appView is null)
         {
@@ -45,7 +39,7 @@ public class AppPresenter
         _logic.UsedFilterKey = FilterKey;
         SetProgressLoad(true);
 
-        Bitmap resultImage = await _logic.ConvertToAsync(incomingImage);
+        var resultImage = _logic.ConvertTo(incomingImage);
 
         SetProgressLoad(false);
         SetViewPictureBoxImage(resultImage);
